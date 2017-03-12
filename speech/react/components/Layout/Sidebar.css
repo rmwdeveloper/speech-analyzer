@@ -19,20 +19,21 @@
 
 
 .title {
+  margin-top: 10px;
   font-size: 60px;
   color: #fff;
   text-decoration: none;
 }
 
 .sidebar {
-  width: 100px;
+  width: 50px;
   box-shadow: 1px 1px 12px black;
   background-color: var(--secondary-color);
   font-family: var(--font-family-secondary);
 }
 
-@media screen and (max-width: 1024px) {
-  .row {
-    padding: 0 16px;
+@media (--tablet) {
+  .sidebar {
+     width: 100px;
   }
 }
