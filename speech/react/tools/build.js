@@ -24,7 +24,7 @@ const html = task('html', () => {
   const template = fs.readFileSync('./public/index.ejs', 'utf8');
   const render = ejs.compile(template, { filename: './public/index.ejs' });
   const output = render({ debug: webpackConfig.debug, bundle: assets.main.js, config });
-  fs.writeFileSync('./public/index.html', output, 'utf8');
+  fs.writeFileSync('../static/app/public/index.html', output, 'utf8');
 });
 
 // Generate sitemap.xml
@@ -35,7 +35,7 @@ const sitemap = task('sitemap', () => {
   const template = fs.readFileSync('./public/sitemap.ejs', 'utf8');
   const render = ejs.compile(template, { filename: './public/sitemap.ejs' });
   const output = render({ config, urls });
-  fs.writeFileSync('public/sitemap.xml', output, 'utf8');
+  fs.writeFileSync('../static/app/public/sitemap.xml', output, 'utf8');
 });
 
 // Bundle JavaScript, CSS and image files with Webpack
@@ -58,7 +58,7 @@ const bundle = task('bundle', () => {
 // -----------------------------------------------------------------------------
 module.exports = task('build', () => {
   global.DEBUG = process.argv.includes('--debug') || false;
-  rimraf.sync('public/dist/*', { nosort: true, dot: true });
+  rimraf.sync('../static/app/public/dist/*', { nosort: true, dot: true });
   return Promise.resolve()
     .then(bundle)
     .then(html)
