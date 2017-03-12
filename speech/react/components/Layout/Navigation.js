@@ -27,9 +27,9 @@ class Navigation extends React.Component {
       <nav className={s.root} ref={node => (this.root = node)}>
         <Link className={s.link} to="/"><i className="fa fa-home" /></Link>
         <Link className={s.link} to="/about"><i className="fa fa-question" /></Link>
+        <Link className={s.link} to="#"><i className="fa fa-phone" /></Link>
         <Link className={s.link} to="#"><i className="fa fa-rocket" /></Link>
-        <Link className={s.link} to="#"><i className="fa fa-print" /></Link>
-        <Link className={s.link} to="/about"><i className="fa fa-plus" /></Link>
+        <Link className={s.link} to="/about"><i className="fa fa-motorcycle" /></Link>
       </nav>
     );
   }
