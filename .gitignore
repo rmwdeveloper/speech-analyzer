@@ -98,3 +98,4 @@ ENV/
 
 staticfiles/
 media/
+docs/
