@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 
-export default function uploader(WrappedComponent, uploadUrl) {
+export default function uploader(WrappedComponent, uploadUrl, acceptedFiles) {
   return class extends Component {
     constructor(){
       super();
@@ -21,6 +21,7 @@ export default function uploader(WrappedComponent, uploadUrl) {
       this.dropzone = new Dropzone(this.uploader, {url: uploadUrl,
         autoProcessQueue:false,
         clickable: true,
+        acceptedFiles,
         createImageThumbnails: false,
         previewsContainer: null,
         addedfile: file => {
@@ -34,8 +35,10 @@ export default function uploader(WrappedComponent, uploadUrl) {
 
     }
     render() {
+      const accepted = acceptedFiles.join('|');
+
       return (<div style={{display: 'inline-block'}} ref={(uploader) => { this.uploader = uploader; }}>
-        <input ref={(input) => { this.input = input; }} style={{display: 'none'}} type="file" />
+        <input accept={accepted} ref={(input) => { this.input = input; }} style={{display: 'none'}} type="file" />
         <WrappedComponent  {...this.props} />
       </div>);
     }

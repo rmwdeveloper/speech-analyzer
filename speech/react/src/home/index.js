@@ -14,7 +14,7 @@ import UploadHOC from '../../components/Uploader';
 import UploadBox from '../../components/UploadBox';
 import s from './styles.css';
 import { title, html } from './index.md';
-
+import {acceptedAudioMimeTypes} from '../config';
 class HomePage extends React.Component {
 
   static propTypes = {
@@ -30,7 +30,7 @@ class HomePage extends React.Component {
   }
 
   render() {
-    const Uploader = UploadHOC(UploadBox, '/upload');
+    const Uploader = UploadHOC(UploadBox, '/upload', acceptedAudioMimeTypes );
 
     return (
       <Layout className={s.content}>
