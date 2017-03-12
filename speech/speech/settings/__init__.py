@@ -1,4 +1,5 @@
 from speech.settings.base import *
+
 try:
     from .local_settings import *
 except ImportError:

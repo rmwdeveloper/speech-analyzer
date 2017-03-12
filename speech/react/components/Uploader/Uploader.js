@@ -25,7 +25,11 @@ export default function uploader(WrappedComponent, uploadUrl, acceptedFiles) {
         createImageThumbnails: false,
         previewsContainer: null,
         addedfile: file => {
-          console.log(file);
+          const data = new FormData();
+          data.append('file', file);
+
+          fetch('http://localhost:8000/upload/', {method: 'post', body: data } )
+
         }
       });
 

@@ -1,26 +1,27 @@
+{% load static %}
 <!doctype html>
 <html class="no-js" lang="">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title><%= config.title %></title>
+    <title>React Static Boilerplate</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Josefin+Sans|Roboto:300,400,400italic,500,500italic,700,700italic">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
   </head>
   <body>
     <div id="container"></div>
-    <script src="<%= bundle %>"></script>
-    <%_ if (!debug && config.trackingID) { _%>
+    <script src={% static "app/public/dist/main.ee672d92a21d02c367e7.js" %}></script>
+    <input id='csrf' type='hidden' name='csrfmiddlewaretoken' value='{{ csrf_token }}' />
     <script>
       window.ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;
-      ga('create','<%= config.trackingID %>','auto');ga('send','pageview')
+      ga('create','UA-XXXXX-Y','auto');ga('send','pageview')
     </script>
     <script src="https://www.google-analytics.com/analytics.js" async defer></script>
-    <%_ } _%>
+
   </body>
 </html>

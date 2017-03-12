@@ -16,11 +16,12 @@
   <body>
     <div id="container"></div>
     <script src={% static "app/public/dist/main.ee672d92a21d02c367e7.js" %}></script>
-
+    <input id='csrf' type='hidden' name='csrfmiddlewaretoken' value='{{ csrf_token }}' />
     <script>
       window.ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;
       ga('create','UA-XXXXX-Y','auto');ga('send','pageview')
     </script>
     <script src="https://www.google-analytics.com/analytics.js" async defer></script>
+
   </body>
 </html>
