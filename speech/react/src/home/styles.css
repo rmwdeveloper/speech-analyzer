@@ -7,7 +7,12 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE.txt file in the root directory of this source tree.
  */
+@import '../../components/variables.css';
 
+
+.content {
+  font-family: var(--font-family-base);
+}
 @media screen and (max-width: 1024px) {
   .content {
     padding: 0 16px;

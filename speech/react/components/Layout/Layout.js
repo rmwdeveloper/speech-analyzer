@@ -10,10 +10,8 @@
 
 import React, { PropTypes } from 'react';
 import cx from 'classnames';
-import Header from './Header';
-import Footer from '../Footer';
 import s from './Layout.css';
-
+import Sidebar from './Sidebar';
 class Layout extends React.Component {
 
   static propTypes = {
@@ -31,11 +29,10 @@ class Layout extends React.Component {
   render() {
     return (
       <div className="mdl-layout mdl-js-layout" ref={node => (this.root = node)}>
-        <div className="mdl-layout__inner-container">
-          <Header />
+        <div className={`mdl-layout__inner-container ${s.innerContainer}`}>
+          <Sidebar />
           <main className="mdl-layout__content">
             <div {...this.props} className={cx(s.content, this.props.className)} />
-            <Footer />
           </main>
         </div>
       </div>

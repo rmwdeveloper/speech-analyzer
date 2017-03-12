@@ -11,5 +11,10 @@
 .content {
   margin: 0 auto;
   max-width: 1000px;
-  width: 100%;
+  width: calc(100% - 100px);
+}
+
+
+.innerContainer {
+ flex-direction: row;
 }

@@ -1,0 +1,59 @@
+/**
+ * React Starter Kit (https://www.reactstarterkit.com/)
+ *
+ * Copyright © 2014-2016 Kriasoft, LLC. All rights reserved.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE.txt file in the root directory of this source tree.
+ */
+
+:root {
+  /*
+   * Typography
+   * ======================================================================== */
+
+  --font-family-base: 'Roboto', sans-serif;
+  --font-family-secondary: 'Josefin Sans', sans-serif;
+
+  /*
+   * Layout
+   * ======================================================================== */
+
+  --max-content-width: 1000px;
+
+  /*
+  * Color Scheme
+  * ======================================================================== */
+  --primary-color: #45AEE8;
+  --secondary-color: #22222C;
+  --tertiary-color: #524EBD;
+  --quaternary-color: #417CE4;
+
+  --primary-font-color: #FFF;
+  --console-background: #211d1a;
+  --console-font-color: #ddaa2d;
+
+  /*
+   * Media queries breakpoints
+   * ======================================================================== */
+
+  --screen-xs-min: 480px; /* Extra small screen / phone */
+  --screen-xs-max: 767px;
+
+  --screen-sm-min: 768px; /* Small screen / tablet */
+  --screen-sm-max: 991px;
+
+  --screen-md-min: 992px; /* Medium screen / desktop */
+  --screen-md-max: 1119px;
+
+  --screen-lg-min: 1200px; /* Large screen / wide desktop */
+
+  @custom-media --phoneRetina (min-width: 320px);
+  @custom-media --phone (min-width: 480px);
+  @custom-media --phoneLandscape (min-width: 568px);
+  @custom-media --tablet (min-width: 768px);
+  @custom-media --desktop (min-width: 992px);
+  @custom-media --tabletLandscape (min-width: 1024px);
+  @custom-media --widescreen (min-width: 1200px);
+
+}
