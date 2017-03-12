@@ -31,7 +31,9 @@ class HomePage extends React.Component {
   render() {
     return (
       <Layout className={s.content}>
-        <Uploader />
+        <Uploader uploadUrl="/upload">
+          
+        </Uploader>
       </Layout>
     );
   }
