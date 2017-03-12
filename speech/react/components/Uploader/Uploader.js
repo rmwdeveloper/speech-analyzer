@@ -18,7 +18,7 @@ export default function uploader(WrappedComponent, uploadUrl) {
     }
     componentDidMount() {
 
-      this.dropzone = new Dropzone(this.uploader, {url: '/',
+      this.dropzone = new Dropzone(this.uploader, {url: uploadUrl,
         autoProcessQueue:false,
         clickable: true,
         createImageThumbnails: false,
