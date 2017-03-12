@@ -28,7 +28,7 @@ class Sidebar extends React.Component {
       <div className={s.sidebar} ref={node => (this.root = node)}>
         <div className={s.row}>
           <Link className={s.title} to="/">
-            Speech Analyzer
+            S
           </Link>
           <div className="mdl-layout-spacer" />
           <Navigation />
