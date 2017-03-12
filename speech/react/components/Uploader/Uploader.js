@@ -8,15 +8,18 @@ class Uploader extends Component {
     const { uploadUrl } = this.props;
     this.dropzone = new Dropzone(this.uploader, {url: 'uploadUrl',
       autoProcessQueue:false,
-      clickable: false,
+      clickable: true,
       createImageThumbnails: false,
       previewsContainer: null,
-      addedfile: file => {}
+      addedfile: file => {
+        console.log(file);
+      }
     });
+
   }
   render() {
-
-    return (<div ref={(uploader) => { this.uploader = uploader; }}>
+    console.log(this.props.children);
+    return (<div style={{outline: '1px solid red', zIndex: 2}} ref={(uploader) => { this.uploader = uploader; }}>
       {this.props.children}
     </div>);
   }
