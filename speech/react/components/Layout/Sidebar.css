@@ -26,6 +26,7 @@
 
 .sidebar {
   width: 100px;
+  box-shadow: 1px 1px 12px black;
   background-color: var(--secondary-color);
   font-family: var(--font-family-secondary);
 }

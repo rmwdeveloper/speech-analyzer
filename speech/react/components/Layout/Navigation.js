@@ -9,7 +9,7 @@
  */
 
 import React from 'react';
-import s from './Layout.css';
+import s from './Navigation.css';
 import Link from '../Link';
 
 class Navigation extends React.Component {
@@ -25,8 +25,11 @@ class Navigation extends React.Component {
   render() {
     return (
       <nav className={s.root} ref={node => (this.root = node)}>
-        <Link to="/">Home</Link>
-        <Link to="/about">About</Link>
+        <Link className={s.link} to="/"><i className="fa fa-home" /></Link>
+        <Link className={s.link} to="/about"><i className="fa fa-question" /></Link>
+        <Link className={s.link} to="#"><i className="fa fa-rocket" /></Link>
+        <Link className={s.link} to="#"><i className="fa fa-print" /></Link>
+        <Link className={s.link} to="/about"><i className="fa fa-plus" /></Link>
       </nav>
     );
   }
