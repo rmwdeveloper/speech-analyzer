@@ -11,6 +11,7 @@
 import React, { PropTypes } from 'react';
 import Layout from '../../components/Layout';
 import Uploader from '../../components/Uploader';
+import UploadBox from '../../components/UploadBox';
 import s from './styles.css';
 import { title, html } from './index.md';
 
@@ -32,7 +33,7 @@ class HomePage extends React.Component {
     return (
       <Layout className={s.content}>
         <Uploader uploadUrl="/upload">
-          
+          <UploadBox />
         </Uploader>
       </Layout>
     );
