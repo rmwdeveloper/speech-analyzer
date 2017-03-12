@@ -1,9 +1,9 @@
 import React from 'react';
 import s from './UploadBox.css';
 
-function UploadBox() {
+function UploadBox({}) {
   return (<div className={s.root}>
-    Upload File
+    Drag An Audio File Here
   </div>);
 }
 

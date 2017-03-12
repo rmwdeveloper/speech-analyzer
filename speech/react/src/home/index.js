@@ -10,7 +10,7 @@
 
 import React, { PropTypes } from 'react';
 import Layout from '../../components/Layout';
-import Uploader from '../../components/Uploader';
+import UploadHOC from '../../components/Uploader';
 import UploadBox from '../../components/UploadBox';
 import s from './styles.css';
 import { title, html } from './index.md';
@@ -30,11 +30,11 @@ class HomePage extends React.Component {
   }
 
   render() {
+    const Uploader = UploadHOC(UploadBox, '/upload');
+
     return (
       <Layout className={s.content}>
-        <Uploader uploadUrl="/upload">
-          <UploadBox />
-        </Uploader>
+        <Uploader />
       </Layout>
     );
   }

@@ -19,11 +19,11 @@ class Layout extends React.Component {
   };
 
   componentDidMount() {
-    window.componentHandler.upgradeElement(this.root);
+    // window.componentHandler.upgradeElement(this.root);
   }
 
   componentWillUnmount() {
-    window.componentHandler.downgradeElements(this.root);
+    // window.componentHandler.downgradeElements(this.root);
   }
 
   render() {
