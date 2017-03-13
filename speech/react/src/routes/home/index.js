@@ -4,7 +4,7 @@ import UploadHOC from '../../components/Uploader';
 import UploadBox from '../../components/UploadBox';
 import s from './styles.css';
 import { title, html } from './index.md';
-import {acceptedAudioMimeTypes} from '../config';
+import {acceptedAudioMimeTypes} from '../../config';
 // import ReconnectingWebsocket from 'reconnectingwebsocket';
 
 
@@ -19,12 +19,12 @@ class HomePage extends React.Component {
   };
   constructor() {
     super();
-    this.sendMessage = this.sendMessage.bind(this);
+    // this.sendMessage = this.sendMessage.bind(this);
     this.recieveMessage = this.recieveMessage.bind(this);
   }
-  sendMessage() {
-    this.chat_socket.send(JSON.stringify({message: 'Hello World'}));
-  }
+  // sendMessage() {
+  //   this.chat_socket.send(JSON.stringify({message: 'Hello World'}));
+  // }
   recieveMessage(message) {
     console.log('message', message);
   }
@@ -45,7 +45,7 @@ class HomePage extends React.Component {
     return (
       <Layout className={s.content}>
         <Uploader />
-        <button onClick={this.sendMessage}> Send Message test </button>
+        {/*<button onClick={this.sendMessage}> Send Message test </button>*/}
       </Layout>
     );
   }

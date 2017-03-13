@@ -34,7 +34,6 @@ function escape(text) {
  */
 module.exports = function routesLoader(source) {
   this.cacheable();
-
   const output = ['[\n'];
   const routes = JSON.parse(source);
 

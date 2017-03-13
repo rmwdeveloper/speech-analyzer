@@ -1,5 +1,5 @@
 import json
-from channels import Group, Channel
+from channels import Group
 from channels.sessions import channel_session
 from channels.handler import AsgiRequest, AsgiHandler
 

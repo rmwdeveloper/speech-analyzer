@@ -20,8 +20,9 @@ import store from './store';
 import router from './router';
 import history from './history';
 
-let routes = require('./routes.json').default; // Loaded with utils/routes-loader.js
+let routes = require('./routes/routes.json').default; // Loaded with utils/routes-loader.js
 
+console.log(routes);
 const container = document.getElementById('container');
 
 function renderComponent(component) {
@@ -48,8 +49,8 @@ FastClick.attach(document.body);
 
 // Enable Hot Module Replacement (HMR)
 if (module.hot) {
-  module.hot.accept('./routes.json', () => {
-    routes = require('./routes.json').default; // eslint-disable-line global-require
+  module.hot.accept('./routes/routes.json', () => {
+    routes = require('./routes/routes.json'); // eslint-disable-line global-require
     render(history.location);
   });
 }

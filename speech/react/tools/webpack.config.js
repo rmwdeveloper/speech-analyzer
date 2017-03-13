@@ -126,14 +126,14 @@ const config = {
       {
         test: /\.json$/,
         exclude: [
-          path.resolve(__dirname, '../src/routes.json'),
+          path.resolve(__dirname, '../src/routes/routes.json'),
         ],
         loader: 'json-loader',
       },
       {
         test: /\.json$/,
         include: [
-          path.resolve(__dirname, '../src/routes.json'),
+          path.resolve(__dirname, '../src/routes/routes.json'),
         ],
         use: [
           {
