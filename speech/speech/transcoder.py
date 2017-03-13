@@ -40,4 +40,9 @@ def transcodeAudio(file):
         inputs=inputs,
         outputs=outputs
     )
-    transcode.run()
+    try:
+        transcode.run()
+        ##Emit transcoding signal..
+    except ffmpy.FFRuntimeError as e:
+        pass
+        ## TODO: emit error, LOG IT
