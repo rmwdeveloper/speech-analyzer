@@ -16,6 +16,7 @@ def callAPI(instance):
     try:
         text = r.recognize_ibm(audio, username=IBM_USERNAME, password=IBM_PASSWORD)
         instance.transcribedSpeech = text
+        instance.transcribed = True
         instance.save()
         Group('main').send({'text': text})
     except sr.UnknownValueError:
@@ -23,4 +24,3 @@ def callAPI(instance):
     except sr.RequestError as e:
         print("Could not request results from IBM Speech to Text service; {0}".format(e))
 
-    return 'Hello'
