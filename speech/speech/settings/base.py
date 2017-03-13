@@ -128,6 +128,10 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
+# Uploaded Files
+
+MEDIA_ROOT= BASE_DIR + '/uploads/'
+
 #### CORS SETTINGS
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -160,3 +164,4 @@ CHANNEL_LAYERS = {
         "ROUTING": "speech.routing.channel_routing",
     },
 }
+

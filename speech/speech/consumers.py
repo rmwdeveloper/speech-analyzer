@@ -1,10 +1,8 @@
-import json
 from channels import Group
 from channels.sessions import channel_session
 from channels.handler import AsgiRequest, AsgiHandler
 
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+
 from .models import Test
 
 def my_consumer(message):
@@ -37,9 +35,3 @@ def ws_disconnect(message):
     label = message.channel_session['room']
     Group('main').discard(message.reply_channel)
 
-@receiver(post_save, sender=Test, dispatch_uid="test")
-def test(sender, instance, **kwargs):
-    Group('main').send({
-        "text": json.dumps({
-            "id": 1,
-            "content": 'Content! ! ! !'})})
