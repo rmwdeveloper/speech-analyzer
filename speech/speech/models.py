@@ -10,6 +10,7 @@ class Audio(models.Model):
     audio = models.FileField(upload_to = 'raw/%Y/%m/%d')
     transcoded = models.BooleanField(default=False)
 
-class Test(models.Model):
-    foo = models.CharField(max_length=255)
 
+
+
+from . import signals ## should be done with appconfig
