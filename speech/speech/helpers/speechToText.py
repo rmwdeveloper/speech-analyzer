@@ -1,3 +1,4 @@
+import os
 from channels import Group
 from django.conf import settings
 import speech_recognition as sr
@@ -6,7 +7,7 @@ import speech_recognition as sr
 def callAPI(instance):
     # recognize speech using IBM Speech to Text
     IBM_USERNAME = settings.IBM_USERNAME  # IBM Speech to Text usernames are strings of the form XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
-    IBM_PASSWORD = settings.IBM_USERNAME  # IBM Speech to Text passwords are mixed-case alphanumeric strings
+    IBM_PASSWORD = settings.IBM_PASSWORD  # IBM Speech to Text passwords are mixed-case alphanumeric strings
 
     try:
         print(

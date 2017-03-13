@@ -166,3 +166,8 @@ CHANNEL_LAYERS = {
     },
 }
 
+
+### API Credentials
+IBM_URL = "https://stream.watsonplatform.net/speech-to-text/api"
+IBM_USERNAME = ""
+IBM_PASSWORD = ""
