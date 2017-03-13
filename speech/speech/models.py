@@ -1,13 +1,10 @@
-import os
 from django.db import models
+from django.conf import settings
 
 
-def get_upload_path(instance, filename):
-    return os.path.join(
-      "user_%d" % instance.owner.id, "car_%s" % instance.slug, filename)
 
 class Audio(models.Model):
-    audio = models.FileField(upload_to = 'raw/%Y/%m/%d')
+    audio = models.FileField(upload_to = settings.UNTRANSCODED_PREFIX + '/%Y/%m/%d')
     transcoded = models.BooleanField(default=False)
 
 
