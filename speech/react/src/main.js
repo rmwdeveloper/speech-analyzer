@@ -16,14 +16,15 @@ import ReactDOM from 'react-dom';
 import FastClick from 'fastclick';
 import { Provider } from 'react-redux';
 
-import store from './store';
+import configureStore from './store';
 import router from './router';
 import history from './history';
 
 let routes = require('./routes/routes.json').default; // Loaded with utils/routes-loader.js
 
-console.log(routes);
+
 const container = document.getElementById('container');
+const store = configureStore();
 
 function renderComponent(component) {
   ReactDOM.render(<Provider store={store}>{component}</Provider>, container);
@@ -50,7 +51,7 @@ FastClick.attach(document.body);
 // Enable Hot Module Replacement (HMR)
 if (module.hot) {
   module.hot.accept('./routes/routes.json', () => {
-    routes = require('./routes/routes.json'); // eslint-disable-line global-require
+    routes = require('./routes/routes.json').default; // eslint-disable-line global-require
     render(history.location);
   });
 }

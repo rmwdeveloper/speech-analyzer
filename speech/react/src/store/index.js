@@ -21,9 +21,9 @@ import thunk from 'redux-thunk';
 import rootReducer from '../reducers';
 
 
-export default function configureStore(initialState, helpersConfig) {
-  const helpers = createHelpers(helpersConfig);
-  const middleware = [thunk.withExtraArgument(helpers)];
+export default function configureStore(initialState) {
+;
+  const middleware = [thunk.withExtraArgument({})];
 
   let enhancer;
 
