@@ -1,13 +1,17 @@
 import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
 import Layout from '../../components/Layout';
 import UploadHOC from '../../components/Uploader';
 import UploadBox from '../../components/UploadBox';
 import s from './styles.css';
 import { title, html } from './index.md';
 import {acceptedAudioMimeTypes} from '../../config';
+import * as speechActions from '../../actions/speech';
 // import ReconnectingWebsocket from 'reconnectingwebsocket';
 
-
+@connect(state => ({
+  runtimeVariableSet: state.speech.runtimeVariableSet
+}), { ...speechActions })
 class HomePage extends React.Component {
 
   static propTypes = {
