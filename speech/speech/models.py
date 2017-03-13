@@ -8,6 +8,7 @@ def get_upload_path(instance, filename):
 
 class Audio(models.Model):
     audio = models.FileField(upload_to = 'raw/%Y/%m/%d')
+    transcoded = models.BooleanField(default=False)
 
 class Test(models.Model):
     foo = models.CharField(max_length=255)
