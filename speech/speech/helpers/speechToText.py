@@ -8,6 +8,10 @@ def callAPI(instance):
     # recognize speech using IBM Speech to Text
     IBM_USERNAME = settings.IBM_USERNAME  # IBM Speech to Text usernames are strings of the form XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
     IBM_PASSWORD = settings.IBM_PASSWORD  # IBM Speech to Text passwords are mixed-case alphanumeric strings
+    AUDIO_FILE = instance.audio.file.name
+    r = sr.Recognizer()
+    with sr.AudioFile(AUDIO_FILE) as source:
+        audio = r.record(source)  # read the entire audio file
 
     try:
         print(
