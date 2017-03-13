@@ -3,7 +3,7 @@ import s from './UploadBox.css';
 
 function UploadBox({}) {
   return (<div className={s.root}>
-    Drag An Audio File Here
+    Click or drag an audio file here to upload.
   </div>);
 }
 

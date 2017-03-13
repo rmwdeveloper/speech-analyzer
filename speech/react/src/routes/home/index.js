@@ -23,12 +23,9 @@ class HomePage extends React.Component {
   };
   constructor() {
     super();
-    // this.sendMessage = this.sendMessage.bind(this);
     this.recieveMessage = this.recieveMessage.bind(this);
   }
-  // sendMessage() {
-  //   this.chat_socket.send(JSON.stringify({message: 'Hello World'}));
-  // }
+
   recieveMessage(message) {
     console.log('message', message);
   }
