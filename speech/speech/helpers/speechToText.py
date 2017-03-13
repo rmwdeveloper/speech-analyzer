@@ -14,12 +14,13 @@ def callAPI(instance):
         audio = r.record(source)  # read the entire audio file
 
     try:
-        print(
-        "IBM Speech to Text thinks you said " + r.recognize_ibm(audio, username=IBM_USERNAME, password=IBM_PASSWORD))
+        text = r.recognize_ibm(audio, username=IBM_USERNAME, password=IBM_PASSWORD)
+        instance.transcribedSpeech = text
+        instance.save()
+        Group('main').send({'text': text})
     except sr.UnknownValueError:
         print("IBM Speech to Text could not understand audio")
     except sr.RequestError as e:
         print("Could not request results from IBM Speech to Text service; {0}".format(e))
 
-    Group('main').send({'text': 'Speech To Text Complete'})
     return 'Hello'
