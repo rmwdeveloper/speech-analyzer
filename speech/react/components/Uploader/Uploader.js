@@ -17,18 +17,24 @@ export default function uploader(WrappedComponent, uploadUrl, acceptedFiles) {
       }
     }
     componentDidMount() {
-
       this.dropzone = new Dropzone(this.uploader, {url: uploadUrl,
         autoProcessQueue:false,
         clickable: true,
-        acceptedFiles,
+        acceptedFiles: acceptedFiles.toString(),
         createImageThumbnails: false,
         previewsContainer: null,
         addedfile: file => {
           const data = new FormData();
           data.append('file', file);
-
-          fetch('http://localhost:8000/upload/', {method: 'post', body: data } )
+     ;
+          fetch('http://localhost:8000/upload/', {method: 'post', body: data } ).then(response => {
+            console.log(response);
+            // response.json().then(body => {
+            //   console.log(body);
+            // })
+          }).catch(error => {
+            console.log('error',error);
+          })
 
         }
       });

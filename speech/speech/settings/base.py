@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders'
+    'corsheaders',
+    'channels',
+    'speech'
 ]
 
 MIDDLEWARE = [
@@ -142,3 +144,19 @@ CORS_ALLOW_HEADERS = (
     'Access-Control-Allow-Origin',
     'Access-Control-Allow-Headers'
 )
+
+##Channel Layers
+# channel_routing = {
+#     "some-channel": "myapp.consumers.my_consumer",
+# }
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgiref.inmemory.ChannelLayer",
+        # "BACKEND": "asgi_redis.RedisChannelLayer",
+        # "CONFIG": {
+        #     "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+        # },
+        "ROUTING": "speech.routing.channel_routing",
+    },
+}
