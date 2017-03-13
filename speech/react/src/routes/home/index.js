@@ -27,7 +27,7 @@ class HomePage extends React.Component {
   }
 
   recieveMessage(message) {
-    console.log('message', message);
+    console.log(message.data);
   }
   componentDidMount() {
     document.title = title;

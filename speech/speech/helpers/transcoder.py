@@ -1,5 +1,6 @@
 import os
 import ffmpy
+from channels import Group
 from django.conf import settings
 
 ## TODO : would be better as a class.. lots of duplication here
@@ -25,11 +26,13 @@ def getOutputDirectory(filename):
     subpath = getSubpath(filename)
     base, name = os.path.split(subpath)
     transcoded_directory = createDirectory(base)
-    old_filename, old_file_extension = name.split('.')
+    old_filename, old_file_extension = os.path.splitext(name)
     new_filename = old_filename + '.wav'
     return os.path.join(transcoded_directory, new_filename)
 
-def transcodeAudio(file):
+def transcodeAudio(audio_instance):
+    file = audio_instance.audio.file
+
     inputs = {}
     outputs = {}
     output_directory = getOutputDirectory(file.name)
@@ -42,7 +45,11 @@ def transcodeAudio(file):
     )
     try:
         transcode.run()
-        ##Emit transcoding signal..
+        audio_instance.transcoded = True
+        audio_instance.audio.file.name = output_directory
+        audio_instance.save()
+        Group('main').send({'text': 'Transcode Complete.'})
+
     except ffmpy.FFRuntimeError as e:
         pass
         ## TODO: emit error, LOG IT

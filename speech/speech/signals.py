@@ -1,20 +1,22 @@
-import json
-from channels import Group
-from django.dispatch import Signal
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+
 from .models import Audio
-from .transcoder import transcodeAudio
+from channels import Group
+from helpers.transcoder import transcodeAudio
+from helpers.speechToText import callAPI
+
 
 @receiver(post_save, sender=Audio)
 def transcode(sender, instance, **kwargs):
     if kwargs.get('created', False):
-        transcodeAudio(instance.audio.file)
-        instance.transcoded = True
-        instance.save()
+        transcodeAudio(instance)
 
-    # Group('main').send({
-    #     "text": json.dumps({
-    #         "id": 1,
-    #         "content": 'Content! ! ! !'})})
+@receiver(post_save, sender=Audio)
+def speechToText(sender, instance, **kwargs):
+    if not kwargs.get('created', False) and not instance.convertedToAudio:
+        callAPI(instance)
+
+
+
 
