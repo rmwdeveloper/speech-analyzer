@@ -7,7 +7,7 @@ import s from './styles.css';
 import { title, html } from './index.md';
 import {acceptedAudioMimeTypes} from '../../config';
 import * as speechActions from '../../actions/speech';
-// import ReconnectingWebsocket from 'reconnectingwebsocket';
+import ReconnectingWebsocket from 'reconnectingwebsocket';
 
 @connect(state => ({
   runtimeVariableSet: state.speech.runtimeVariableSet
@@ -34,7 +34,7 @@ class HomePage extends React.Component {
     //todo : connect to socket
     const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
 
-    this.chat_socket = new WebSocket(ws_scheme + '://' + 'localhost:8000' + "/");
+    this.chat_socket = new ReconnectingWebsocket(ws_scheme + '://' + 'localhost:8000' + "/");
     this.chat_socket.onmessage = this.recieveMessage;
     // const chat_socket = new ReconnectingWebsocket(ws_scheme + '://' + window.location.host + "/chat" + window.location.pathname);
 

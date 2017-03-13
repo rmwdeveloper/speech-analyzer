@@ -18,12 +18,13 @@ def callAPI(instance):
         password=IBM_PASSWORD,
         x_watson_learning_opt_out=False
     )
+    print 'opening file'
     with open(AUDIO_FILE, 'rb') as audio_file:
-
+        print 'calling api'
         response = speech_to_text.recognize(
-            audio_file, content_type='audio/wav', timestamps=True,
+            audio_file, content_type='audio/wav', timestamps=True, continuous=True,
             word_confidence=True)
-
+        print 'response recieved'
         data = response['results'][0]['alternatives'][0]
         t0 = 'test'
         instance.transcribedSpeech = data['transcript']
