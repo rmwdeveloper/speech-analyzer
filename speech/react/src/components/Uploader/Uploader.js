@@ -25,8 +25,8 @@ export default function uploader(WrappedComponent, uploadUrl, acceptedFiles) {
         previewsContainer: null,
         addedfile: file => {
           const data = new FormData();
-          data.append('file', file);
-     ;
+          data.append('audio', file);
+
           fetch('http://localhost:8000/upload/', {method: 'post', body: data } ).then(response => {
             console.log(response);
             // response.json().then(body => {

@@ -3,7 +3,7 @@ from django.forms import ModelForm
 
 
 
-class BookForm(ModelForm):
+class AudioForm(ModelForm):
     class Meta:
         model = Audio
-        
+        fields = ['audio']

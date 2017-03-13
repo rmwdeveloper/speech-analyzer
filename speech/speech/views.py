@@ -1,6 +1,7 @@
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
+from .forms import AudioForm
 
 
 @csrf_exempt
@@ -9,4 +10,10 @@ def index(request):
 
 @csrf_exempt
 def upload(request):
-    return HttpResponse('Hello World')
+    if request.method == 'POST':
+        form = AudioForm(request.POST, request.FILES)
+        if form.is_valid():
+            # file is saved
+            form.save()
+            return HttpResponse(status=200)
+    return HttpResponse('')
