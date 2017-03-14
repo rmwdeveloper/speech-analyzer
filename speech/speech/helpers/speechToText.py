@@ -5,16 +5,19 @@ from channels import Group
 import base64
 import time
 from django.conf import settings
-from speech.models import Timestamp
+# from speech.models import Timestamp
 from watson_developer_cloud import SpeechToTextV1
 # import speech_recognition as sr
 import googleapiclient.discovery
+from speech.models import Transcription
 
+#todo refactor all this trash
 def get_speech_service():
     return googleapiclient.discovery.build('speech', 'v1beta1', developerKey=settings.GOOGLE_KEY)
 
-def transcribe(speech_file):
-    with open(speech_file, 'rb') as speech:
+def transcribe(instance):
+    AUDIO_FILE = instance.transcoded_path
+    with open(AUDIO_FILE, 'rb') as speech:
         # Base64 encode the binary audio file for inclusion in the request.
         speech_content = base64.b64encode(speech.read())
 
@@ -46,11 +49,14 @@ def transcribe(speech_file):
 
     while True:
         # Give the server a few seconds to process.
-        print('Waiting for server processing...')
         time.sleep(1)
         # Get the long running operation with response.
         response = service_request.execute()
-
+        # if hasattr(response['metadata'], 'progressPercent'):
+        #     print response['metadata']['progressPercent']
+        # else:
+        #     print response['metadata']
+        print 'working'
         if 'done' in response and response['done']:
             break
 
@@ -61,13 +67,18 @@ def transcribe(speech_file):
     for result in response['response'].get('results', []):
         print('Result:')
         for alternative in result['alternatives']:
+            Transcription.objects.create(audio=instance, transcription = alternative['transcript'],
+                                        confidence=alternative['confidence'])
             print(u'  Alternative: {}'.format(alternative['transcript']))
-
+    instance.transcribed = True
+    instance.save()
+    ##todo: save transcription
+    # os.remove(instance.audio.file.name)
+    # os.remove(instance.transcoded_path)
     print 'Done!'
 
 
 
 def callAPI(instance):
-    AUDIO_FILE = instance.audio.file.name
-    transcribe(AUDIO_FILE)
+    transcribe(instance)
 

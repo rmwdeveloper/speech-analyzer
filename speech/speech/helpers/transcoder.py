@@ -50,7 +50,7 @@ def transcodeAudio(audio_instance):
     try:
         tfm.build(file.name, output_directory)
         audio_instance.transcoded = True
-        audio_instance.audio.file.name = output_directory
+        audio_instance.transcoded_path = output_directory
         audio_instance.save()
         # Group('main').send({'text': 'Transcode Complete.'})
 
