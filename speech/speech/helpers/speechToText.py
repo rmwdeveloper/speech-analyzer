@@ -70,7 +70,7 @@ def transcribe(instance):
             transcript_instance = Transcription.objects.create(audio=instance, transcription = alternative['transcript'],
                                         confidence=alternative['confidence'])
             Group('main').send({'text': json.dumps({'transcription': alternative['transcript'], 'type': 'loadTranscription',
-                                                    'audio': instance.id,
+                                                    'relation': instance.id,
                                                     'id': transcript_instance.id, 'confidence': alternative['confidence']})})
     instance.transcribed = True
     instance.documentTranscription = document_text

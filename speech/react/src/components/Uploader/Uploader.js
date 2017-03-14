@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-
+import uuidV4 from 'uuid/v4';
 export default function uploader(WrappedComponent, uploadUrl, acceptedFiles) {
   return class extends Component {
     constructor(){
@@ -26,10 +26,11 @@ export default function uploader(WrappedComponent, uploadUrl, acceptedFiles) {
         addedfile: file => {
           const data = new FormData();
           data.append('audio', file);
-          this.props.startAnalysis();
+          const uploadId = uuidV4();
+          this.props.startAnalysis(uploadId);
           fetch('http://localhost:8000/upload/', {method: 'post', body: data } ).then(response => {
             response.json().then(body => {
-              this.props.loadAudio({id: body.id, name: file.name});
+              this.props.loadAudio({id: body.id, name: file.name, uploadId});
 
             })
           }).catch(error => {

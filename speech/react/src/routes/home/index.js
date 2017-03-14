@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Layout from '../../components/Layout';
+import AnalysisRow from '../../components/AnalysisRow';
 import s from './styles.css';
 import { title, html } from './index.md';
 
@@ -8,9 +9,11 @@ import * as speechActions from '../../actions/speech';
 import ReconnectingWebsocket from 'reconnectingwebsocket';
 
 @connect(state => ({
-  // runtimeVariableSet: state.speech.runtimeVariableSet
-  transcriptions: state.speech.transcriptions,
-  tones: state.speech.tones
+  audios: state.speech.audios,
+  // transcriptions: state.speech.transcriptions,
+  // sentenceTones: state.speech.sentenceTones,
+  // documentTones: state.speech.documentTones,
+  errors: {}
 }), { ...speechActions })
 class HomePage extends React.Component {
 
@@ -29,7 +32,6 @@ class HomePage extends React.Component {
   recieveMessage(message) {
     const {loadTranscription, loadSentenceTone, loadDocumentTone, endAnalysis} = this.props;
     let data = {};
-    console.log(message.data);
     try {
       data = JSON.parse(message.data);
     } catch(e) {
@@ -72,11 +74,12 @@ class HomePage extends React.Component {
   }
 
   render() {
-
-
+    const {audios} = this.props;
     return (
       <Layout className={s.content}>
-
+        { Object.keys(audios).map( key => {
+          return <AnalysisRow key={key} audio={audios[key]} />
+        })}
         {/*<button onClick={this.sendMessage}> Send Message test </button>*/}
       </Layout>
     );

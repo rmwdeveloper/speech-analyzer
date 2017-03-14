@@ -9,11 +9,17 @@
  */
 
 import React from 'react';
+import { connect } from 'react-redux';
 import s from './Navigation.css';
 import Link from '../Link';
 import {acceptedAudioMimeTypes} from '../../config';
 import UploadHOC from '../../components/Uploader';
 import UploadBox from '../../components/UploadBox';
+import * as speechActions from '../../actions/speech';
+
+@connect(state => ({
+
+}), { ...speechActions })
 class Navigation extends React.Component {
 
   componentDidMount() {

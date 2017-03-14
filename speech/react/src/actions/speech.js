@@ -10,25 +10,35 @@ import {
   ERROR
 } from '../constants';
 
+
 export function setRuntimeVariable() {
   return dispatch => {
     dispatch({ type: SET_RUNTIME_VARIABLE });
   };
 }
 
-export function loadTranscription(data) {
-  const { transcription, confidence, id } = data;
+/*
+* Animate in a new "Analyzer Row", a div containing the filename, a loading icon,
+* */
+export function startAnalysis(uploadId) {
   return dispatch => {
-    dispatch({ type: LOAD_TRANSCRIPTION, transcription, confidence, id });
+    dispatch({ type: START_ANALYSIS, uploadId});
   };
 }
 
-export function loadDocumentTone(data) {
-  const { toneName, score, categoryName, relation } = data;
+/*
+* Update the row with the transcriptions.
+* */
+export function loadTranscription({ transcription, confidence, id, relation }) {
   return dispatch => {
-    dispatch({ type: LOAD_DOCUMENT_TONE, toneName, score, categoryName, relation });
+    dispatch({ type: LOAD_TRANSCRIPTION, transcription, confidence, id, relation });
   };
 }
+
+
+/*
+* Color each sentence with color score?
+* */
 
 export function loadSentenceTone(data) {
   const { toneName, score, categoryName, relation } = data;
@@ -37,20 +47,28 @@ export function loadSentenceTone(data) {
   };
 }
 
-export function loadAudio(data) {
-  const { name, id } = data;
+/*
+* Add some kind of graph tab or something
+* */
+export function loadDocumentTone(data) {
+  const { toneName, score, categoryName, relation } = data;
   return dispatch => {
-    dispatch({ type: LOAD_AUDIO, name, id });
+    dispatch({ type: LOAD_DOCUMENT_TONE, toneName, score, categoryName, relation });
   };
 }
 
-export function startAnalysis() {
+/*
+* Complete..
+* */
+export function loadAudio({ name, id, uploadId }) {
+
   return dispatch => {
-    dispatch({ type: START_ANALYSIS});
+    dispatch({ type: LOAD_AUDIO, name, id, uploadId });
   };
 }
 
-export function endAnalysis() {
+// todo: delete endAnalysis? loadAudio essentially performs the same funciton.
+export function endAnalysis({}) {
   return dispatch => {
     dispatch({ type: END_ANALYSIS});
   };

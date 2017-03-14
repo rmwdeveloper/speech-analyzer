@@ -20,7 +20,7 @@ def analyzeTone(instance):
                                     toneName=category_tone['tone_name'], categoryName=category['category_name'],
                                     )
                 Group('main').send({'text': json.dumps({'toneName': category_tone['tone_name'],
-                                                        'related': transcription.id,
+                                                        'relation': transcription.id,
                                                         'categoryName': category['category_name'],
                                                         'type': 'loadSentenceTone',
                                                         'score': category_tone['score'] })})
@@ -33,7 +33,7 @@ def analyzeTone(instance):
                                         )
 
             Group('main').send({'text': json.dumps({'toneName': category_tone['tone_name'],
-                                                    'related': instance.id,
+                                                    'relation': instance.id,
                                                     'categoryName': category['category_name'],
                                                     'type': 'loadDocumentTone',
                                                     'score': category_tone['score']})})
