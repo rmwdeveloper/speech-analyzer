@@ -27,7 +27,7 @@ def getOutputDirectory(filename):
     base, name = os.path.split(subpath)
     transcoded_directory = createDirectory(base)
     old_filename, old_file_extension = os.path.splitext(name)
-    new_filename = old_filename + '.wav'
+    new_filename = old_filename + '.flac'
     return os.path.join(transcoded_directory, new_filename)
 
 def transcodeAudio(audio_instance):
@@ -37,12 +37,13 @@ def transcodeAudio(audio_instance):
     outputs = {}
     output_directory = getOutputDirectory(file.name)
     inputs[file.name] = None
-    outputs[output_directory] = None
+    outputs[output_directory] = '-ar 16000 -ac 1 -y'
 
     transcode = ffmpy.FFmpeg(
         inputs=inputs,
         outputs=outputs
     )
+    print transcode.cmd
     try:
         transcode.run()
         audio_instance.transcoded = True

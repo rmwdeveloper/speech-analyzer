@@ -9,6 +9,10 @@ def index(request):
     return render(request, 'index.html')
 
 @csrf_exempt
+def results(request):
+    return HttpResponse('results')
+
+@csrf_exempt
 def upload(request):
     if request.method == 'POST':
         form = AudioForm(request.POST, request.FILES)

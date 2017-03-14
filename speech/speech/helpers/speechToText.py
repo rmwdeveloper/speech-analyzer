@@ -1,53 +1,73 @@
 import os
 import json
+import threading
 from channels import Group
+import base64
+import time
 from django.conf import settings
 from speech.models import Timestamp
 from watson_developer_cloud import SpeechToTextV1
 # import speech_recognition as sr
+import googleapiclient.discovery
+
+def get_speech_service():
+    return googleapiclient.discovery.build('speech', 'v1beta1', developerKey=settings.GOOGLE_KEY)
+
+def transcribe(speech_file):
+    with open(speech_file, 'rb') as speech:
+        # Base64 encode the binary audio file for inclusion in the request.
+        speech_content = base64.b64encode(speech.read())
+
+    service = get_speech_service()
+    service_request = service.speech().asyncrecognize(
+        body={
+            'config': {
+                # There are a bunch of config options you can specify. See
+                # https://goo.gl/KPZn97 for the full list.
+                'encoding': 'FLAC',  # raw 16-bit signed LE samples
+                'sampleRate': 16000,  # 16 khz
+                # See http://g.co/cloud/speech/docs/languages for a list of
+                # supported languages.
+                'languageCode': 'en-US',  # a BCP-47 language tag
+            },
+            'audio': {
+                'content': speech_content.decode('UTF-8')
+            }
+        })
+    # [END construct_request]
+    # [START send_request]
+    response = service_request.execute()
+
+    # [END send_request]
+
+    name = response['name']
+    # Construct a GetOperation request.
+    service_request = service.operations().get(name=name)
+
+    while True:
+        # Give the server a few seconds to process.
+        print('Waiting for server processing...')
+        time.sleep(1)
+        # Get the long running operation with response.
+        response = service_request.execute()
+
+        if 'done' in response and response['done']:
+            break
+
+    # First print the raw json response
+    print(json.dumps(response['response'], indent=2))
+
+    # Now print the actual transcriptions
+    for result in response['response'].get('results', []):
+        print('Result:')
+        for alternative in result['alternatives']:
+            print(u'  Alternative: {}'.format(alternative['transcript']))
+
+    print 'Done!'
 
 
 
 def callAPI(instance):
-    # recognize speech using IBM Speech to Text
-    IBM_USERNAME = settings.IBM_USERNAME  # IBM Speech to Text usernames are strings of the form XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
-    IBM_PASSWORD = settings.IBM_PASSWORD  # IBM Speech to Text passwords are mixed-case alphanumeric strings
     AUDIO_FILE = instance.audio.file.name
-    speech_to_text = SpeechToTextV1(
-        username=IBM_USERNAME,
-        password=IBM_PASSWORD,
-        x_watson_learning_opt_out=False
-    )
-    print 'opening file'
-    with open(AUDIO_FILE, 'rb') as audio_file:
-        print 'calling api'
-        response = speech_to_text.recognize(
-            audio_file, content_type='audio/wav', timestamps=True, continuous=True,
-            word_confidence=True)
-        print 'response recieved'
-        data = response['results'][0]['alternatives'][0]
-        t0 = 'test'
-        instance.transcribedSpeech = data['transcript']
-        instance.transcriptionConfidence = data['confidence']
-        instance.transcribed = True
-        instance.save()
-
-        for timestamp in data['timestamps']:
-            Timestamp.objects.create(audio=instance, word = timestamp[0],
-                                     timestampBegin = timestamp[1], timestampEnd=timestamp[2])
-        # Group('main').send({'text': text})
-    # r = sr.Recognizer()
-    # with sr.AudioFile(AUDIO_FILE) as source:
-    #     audio = r.record(source)  # read the entire audio file
-    #
-    # try:
-    #     text = r.recognize_ibm(audio, username=IBM_USERNAME, password=IBM_PASSWORD)
-    #     instance.transcribedSpeech = text
-    #     instance.transcribed = True
-    #     instance.save()
-    #     Group('main').send({'text': text})
-    # except sr.UnknownValueError:
-    #     print("IBM Speech to Text could not understand audio")
-    # except sr.RequestError as e:
-    #     print("Could not request results from IBM Speech to Text service; {0}".format(e))
+    transcribe(AUDIO_FILE)
 
