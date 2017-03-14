@@ -10,7 +10,8 @@ import {
 const initialState = {
   audios: {},
   transcriptions: {}, // {id: {transcription: '', confidence: 0.3} }
-  tones: {}
+  tones: {},
+  errors: {}
   // uploads: {}
 };
 

@@ -33,6 +33,7 @@ export default function uploader(WrappedComponent, uploadUrl, acceptedFiles) {
 
             })
           }).catch(error => {
+            this.props.error(error);
             console.log('error',error);
           })
 

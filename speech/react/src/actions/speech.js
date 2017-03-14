@@ -6,7 +6,8 @@ import {
   LOAD_SENTENCE_TONE,
   LOAD_AUDIO,
   START_ANALYSIS,
-  END_ANALYSIS
+  END_ANALYSIS,
+  ERROR
 } from '../constants';
 
 export function setRuntimeVariable() {
@@ -52,5 +53,11 @@ export function startAnalysis() {
 export function endAnalysis() {
   return dispatch => {
     dispatch({ type: END_ANALYSIS});
+  };
+}
+
+export function error(error) {
+  return dispatch => {
+    dispatch({ type: ERROR, error});
   };
 }
