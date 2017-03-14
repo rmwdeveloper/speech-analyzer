@@ -2,17 +2,18 @@ from speech.models import Audio, Transcription, DocumentTone, SentenceTone
 from rest_framework import serializers
 
 
-class AudioSerializer(serializers.ModelSerializer):
+
+
+
+
+
+
+class SentenceToneSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Audio
+        model = SentenceTone
         fields = '__all__'
 
-class TranscriptionSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Transcription
-        fields = '__all__'
 
 class DocumentToneSerializer(serializers.ModelSerializer):
 
@@ -20,8 +21,19 @@ class DocumentToneSerializer(serializers.ModelSerializer):
         model = DocumentTone
         fields = '__all__'
 
-class SentenceToneSerializer(serializers.ModelSerializer):
+
+class TranscriptionSerializer(serializers.ModelSerializer):
+    tones = SentenceToneSerializer(many=True, read_only=True)
 
     class Meta:
-        model = SentenceTone
-        fields = '__all__'
+        model = Transcription
+        fields = ('id', 'transcription', 'confidence', 'audio', 'tones')
+
+
+class AudioSerializer(serializers.ModelSerializer):
+    transcriptions = TranscriptionSerializer(many=True, read_only=True)
+    tones = DocumentToneSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Audio
+        fields = ('id', 'transcriptions', 'tones', 'audio', 'documentTranscription', )

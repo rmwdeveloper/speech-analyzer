@@ -20,7 +20,7 @@ class Audio(models.Model):
 
 
 class Transcription(models.Model):
-    audio = models.ForeignKey(Audio)
+    audio = models.ForeignKey(Audio, related_name='transcriptions')
     transcription = models.TextField(null = True)
     confidence = models.DecimalField(max_digits=5, decimal_places=5, null=True)
 
@@ -34,10 +34,10 @@ class Tone(models.Model):
         abstract = True
 
 class DocumentTone(Tone):
-    document = models.ForeignKey(Audio)
+    document = models.ForeignKey(Audio, related_name='tones')
 
 class SentenceTone(Tone):
-    sentence = models.ForeignKey(Transcription)
+    sentence = models.ForeignKey(Transcription, related_name='tones')
 
 # class Timestamp(models.Model):
 #     audio = models.ForeignKey(Audio)

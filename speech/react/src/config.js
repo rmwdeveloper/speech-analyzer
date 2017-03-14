@@ -1,5 +1,5 @@
 export const acceptedAudioMimeTypes = ['video/*', 'audio/*'];
-export const baseURL = 'http://localhost:8000';
+export const baseURL = 'localhost:8000'; // todo: change to basedomain
 export const baseAPI = 'speech/api/v1/';
 
 export const audioAPI = `${baseURL}/${baseAPI}audio`;
