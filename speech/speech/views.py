@@ -17,7 +17,6 @@ def upload(request):
     if request.method == 'POST':
         form = AudioForm(request.POST, request.FILES)
         if form.is_valid():
-            # file is saved
             form.save()
-            return HttpResponse(status=200)
+            return JsonResponse({'id': form.instance.id},status=200)
     return HttpResponse('')

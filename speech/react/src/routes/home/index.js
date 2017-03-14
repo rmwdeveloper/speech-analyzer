@@ -10,7 +10,9 @@ import * as speechActions from '../../actions/speech';
 import ReconnectingWebsocket from 'reconnectingwebsocket';
 
 @connect(state => ({
-  runtimeVariableSet: state.speech.runtimeVariableSet
+  // runtimeVariableSet: state.speech.runtimeVariableSet
+  transcriptions: state.speech.transcriptions,
+  tones: state.speech.tones
 }), { ...speechActions })
 class HomePage extends React.Component {
 
@@ -27,14 +29,25 @@ class HomePage extends React.Component {
   }
 
   recieveMessage(message) {
-    console.log(message.data);
+    const {loadTranscription, loadTone} = this.props;
+    const data = JSON.parse(message.data);
+    switch(data.type) {
+      case 'loadTranscription':
+        loadTranscription(data);
+        break;
+      case 'loadTone':
+        loadTone(data);
+        break;
+      default:
+        return null;
+    }
   }
   componentDidMount() {
     document.title = title;
     //todo : connect to socket
     const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
 
-    this.chat_socket = new ReconnectingWebsocket(ws_scheme + '://' + 'localhost:8000' + "/");
+    this.chat_socket = new WebSocket(ws_scheme + '://' + 'localhost:8000' + "/");
     this.chat_socket.onmessage = this.recieveMessage;
     // const chat_socket = new ReconnectingWebsocket(ws_scheme + '://' + window.location.host + "/chat" + window.location.pathname);
 
@@ -45,7 +58,7 @@ class HomePage extends React.Component {
 
     return (
       <Layout className={s.content}>
-        <Uploader />
+        <Uploader {...this.props} />
         {/*<button onClick={this.sendMessage}> Send Message test </button>*/}
       </Layout>
     );

@@ -61,21 +61,21 @@ def transcribe(instance):
             break
 
     # First print the raw json response
-    print(json.dumps(response['response'], indent=2))
+
 
     # Now print the actual transcriptions
     for result in response['response'].get('results', []):
-        print('Result:')
         for alternative in result['alternatives']:
-            Transcription.objects.create(audio=instance, transcription = alternative['transcript'],
+            transcript_instance = Transcription.objects.create(audio=instance, transcription = alternative['transcript'],
                                         confidence=alternative['confidence'])
-            print(u'  Alternative: {}'.format(alternative['transcript']))
+            Group('main').send({'text': json.dumps({'transcription': alternative['transcript'], 'type': 'loadTranscription',
+                                                    'audio': instance.id,
+                                                    'id': transcript_instance.id, 'confidence': alternative['confidence']})})
     instance.transcribed = True
     instance.save()
     ##todo: save transcription
     # os.remove(instance.audio.file.name)
     # os.remove(instance.transcoded_path)
-    print 'Done!'
 
 
 

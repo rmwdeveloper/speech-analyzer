@@ -12,6 +12,7 @@ from helpers.toneAnalyzer import analyzeTone
 def transcode(sender, instance, **kwargs):
     if kwargs.get('created', False):
         transcodeAudio(instance)
+        Group('main').send({'text': 'transcodeStart'})
 
 @receiver(post_save, sender=Audio)
 def speechToText(sender, instance, **kwargs):

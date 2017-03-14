@@ -1,7 +1,8 @@
+import json
 from watson_developer_cloud import ToneAnalyzerV3
 from django.conf import settings
 from speech.models import Transcription, Tone
-
+from channels import Group
 
 def analyzeTone(instance):
     # text = ''
@@ -19,10 +20,8 @@ def analyzeTone(instance):
                 Tone.objects.create(transcription=transcription, score=category_tone['score'],
                                     toneName=category_tone['tone_name'], categoryName=category['category_name'],
                                     )
-
-
-
-
-
-
-    pass
+                Group('main').send({'text': json.dumps({'toneName': category_tone['tone_name'],
+                                                        'transcription': transcription.id,
+                                                        'categoryName': category['category_name'],
+                                                        'type': 'loadTone',
+                                                        'score': category_tone['score'] })})
