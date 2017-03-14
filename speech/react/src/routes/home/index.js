@@ -10,9 +10,9 @@ import ReconnectingWebsocket from 'reconnectingwebsocket';
 
 @connect(state => ({
   audios: state.speech.audios,
-  // transcriptions: state.speech.transcriptions,
-  // sentenceTones: state.speech.sentenceTones,
-  // documentTones: state.speech.documentTones,
+  transcriptions: state.speech.transcriptions,
+  sentenceTones: state.speech.sentenceTones,
+  documentTones: state.speech.documentTones,
   errors: {}
 }), { ...speechActions })
 class HomePage extends React.Component {
@@ -77,9 +77,10 @@ class HomePage extends React.Component {
     const {audios} = this.props;
     return (
       <Layout className={s.content}>
-        { Object.keys(audios).map( key => {
-          return <AnalysisRow key={key} audio={audios[key]} />
-        })}
+        { audios ? Object.keys(audios).map( key => {
+
+          return <AnalysisRow key={key} audio={audios[key]} {...this.props} />
+        }) : null}
         {/*<button onClick={this.sendMessage}> Send Message test </button>*/}
       </Layout>
     );

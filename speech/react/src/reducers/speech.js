@@ -32,12 +32,24 @@ export default function speech(state = initialState, action) {
       relation: action.relation};
       return {...state, transcriptions: newTranscriptions};
     case LOAD_SENTENCE_TONE:
+      if (newSentenceTones.hasOwnProperty(action.relation)) {
       newSentenceTones[action.relation] = [...newSentenceTones[action.relation],
-        {categoryName: action.categoryName, score: action.score, toneName: action.toneName,} ]
+        {categoryName: action.categoryName, score: action.score, toneName: action.toneName,} ];
+      } else {
+        newSentenceTones[action.relation] = [
+        {categoryName: action.categoryName, score: action.score, toneName: action.toneName,} ];
+      }
+
       return {...state, sentenceTones: newSentenceTones};
     case LOAD_DOCUMENT_TONE:
+      if (newDocumentTones.hasOwnProperty(action.relation)) {
       newDocumentTones[action.relation] = [...newDocumentTones[action.relation],
-        {categoryName: action.categoryName, score: action.score, toneName: action.toneName,} ]
+        {categoryName: action.categoryName, score: action.score, toneName: action.toneName,} ];
+      } else {
+        newDocumentTones[action.relation] = [
+        {categoryName: action.categoryName, score: action.score, toneName: action.toneName,} ];
+      }
+
       return {...state, sentenceTones: newSentenceTones};
     case START_ANALYSIS:
       newAudios[action.uploadId] = {filename: action.name};
