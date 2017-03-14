@@ -1,4 +1,6 @@
 // import fetch from '../core/fetch';
+import {baseUrl} from 'config';
+
 import {
   SET_RUNTIME_VARIABLE,
   LOAD_TRANSCRIPTION,
@@ -7,7 +9,8 @@ import {
   LOAD_AUDIO,
   START_ANALYSIS,
   END_ANALYSIS,
-  ERROR
+  ERROR,
+  INITIALIZE
 } from '../constants';
 
 
@@ -75,6 +78,12 @@ export function endAnalysis({}) {
 }
 
 export function error(error) {
+  return dispatch => {
+    dispatch({ type: ERROR, error});
+  };
+}
+
+export function initialize() {
   return dispatch => {
     dispatch({ type: ERROR, error});
   };

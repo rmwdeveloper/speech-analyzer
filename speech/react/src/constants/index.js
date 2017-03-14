@@ -1,5 +1,6 @@
 export const SET_RUNTIME_VARIABLE = 'SET_RUNTIME_VARIABLE';
 
+export const INITIALIZE = 'speech/INITIALIZE';
 export const LOAD_TRANSCRIPTION = 'speech/LOAD_TRANSCRIPTION';
 export const LOAD_SENTENCE_TONE = 'speech/LOAD_SENTENCE_TONE';
 export const LOAD_DOCUMENT_TONE = 'speech/LOAD_DOCUMENT_TONE';

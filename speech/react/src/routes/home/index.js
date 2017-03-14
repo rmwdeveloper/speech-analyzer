@@ -4,7 +4,7 @@ import Layout from '../../components/Layout';
 import AnalysisRow from '../../components/AnalysisRow';
 import s from './styles.css';
 import { title, html } from './index.md';
-
+import { baseURL } from '../../config';
 import * as speechActions from '../../actions/speech';
 import ReconnectingWebsocket from 'reconnectingwebsocket';
 
@@ -62,12 +62,15 @@ class HomePage extends React.Component {
         return null;
     }
   }
+  componentWillMount() {
+    this.props.initialize();
+  }
   componentDidMount() {
     document.title = title;
     //todo : connect to socket
     const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
 
-    this.chat_socket = new WebSocket(ws_scheme + '://' + 'localhost:8000' + "/");
+    this.chat_socket = new WebSocket(ws_scheme + '://' + baseURL + "/");
     this.chat_socket.onmessage = this.recieveMessage;
     // const chat_socket = new ReconnectingWebsocket(ws_scheme + '://' + window.location.host + "/chat" + window.location.pathname);
 
