@@ -5,7 +5,7 @@ from speech.models import Transcription, Tone
 from channels import Group
 
 def analyzeTone(instance):
-    # text = ''
+    document_text = ''
     tone_analyzer = ToneAnalyzerV3(
         username=settings.IBM_TONE_ANALYZER_USERNAME,
         password=settings.IBM_TONE_ANALYZER_PASSWORD,
@@ -14,6 +14,7 @@ def analyzeTone(instance):
     transcriptions = Transcription.objects.filter( audio = instance)
 
     for transcription in transcriptions:
+        document_text = document_text + '. ' + transcription.transcription
         tone = tone_analyzer.tone(text=transcription.transcription)
         for category in tone['document_tone']['tone_categories']:
             for category_tone in category['tones']:
@@ -25,3 +26,5 @@ def analyzeTone(instance):
                                                         'categoryName': category['category_name'],
                                                         'type': 'loadTone',
                                                         'score': category_tone['score'] })})
+
+    Group('main').send({'text': json.dumps({'type':'analysisComplete'})})

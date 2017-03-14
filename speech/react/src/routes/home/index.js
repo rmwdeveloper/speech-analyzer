@@ -29,14 +29,18 @@ class HomePage extends React.Component {
   }
 
   recieveMessage(message) {
-    const {loadTranscription, loadTone} = this.props;
+    const {loadTranscription, loadTone, endAnalysis} = this.props;
     const data = JSON.parse(message.data);
+    console.log(data.type);
     switch(data.type) {
       case 'loadTranscription':
         loadTranscription(data);
         break;
       case 'loadTone':
         loadTone(data);
+        break;
+      // case 'analysisComplete':
+      //   endAnalysis();
         break;
       default:
         return null;

@@ -26,6 +26,7 @@ export default function uploader(WrappedComponent, uploadUrl, acceptedFiles) {
         addedfile: file => {
           const data = new FormData();
           data.append('audio', file);
+          this.props.startAnalysis();
           fetch('http://localhost:8000/upload/', {method: 'post', body: data } ).then(response => {
             response.json().then(body => {
               this.props.loadAudio({id: body.id, name: file.name});

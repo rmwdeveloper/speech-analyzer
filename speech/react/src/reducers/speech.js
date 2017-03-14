@@ -1,7 +1,9 @@
 import {
   LOAD_TRANSCRIPTION,
   LOAD_TONE,
-  LOAD_AUDIO
+  LOAD_AUDIO,
+  START_ANALYSIS,
+  END_ANALYSIS
 } from '../constants';
 
 const initialState = {
@@ -21,6 +23,10 @@ export default function speech(state = initialState, action) {
     case LOAD_TRANSCRIPTION:
       newTranscriptions[action.id] = { transcription:action.transcription, confidence: action.confidence };
       return {...state, transcriptions: newTranscriptions};
+    case START_ANALYSIS:
+      return state;
+    case END_ANALYSIS:
+      return state;
     default:
       return state;
   }

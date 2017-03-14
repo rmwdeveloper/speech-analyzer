@@ -3,7 +3,9 @@ import {
   SET_RUNTIME_VARIABLE,
   LOAD_TRANSCRIPTION,
   LOAD_TONE,
-  LOAD_AUDIO
+  LOAD_AUDIO,
+  START_ANALYSIS,
+  END_ANALYSIS
 } from '../constants';
 
 export function setRuntimeVariable() {
@@ -29,5 +31,17 @@ export function loadAudio(data) {
   const { name, id } = data;
   return dispatch => {
     dispatch({ type: LOAD_AUDIO, name, id });
+  };
+}
+
+export function startAnalysis() {
+  return dispatch => {
+    dispatch({ type: START_ANALYSIS});
+  };
+}
+
+export function endAnalysis() {
+  return dispatch => {
+    dispatch({ type: END_ANALYSIS});
   };
 }
