@@ -1,10 +1,15 @@
 from django.db import models
 from django.conf import settings
-
+from formatChecker import AudioVideoFileField
 
 
 class Audio(models.Model):
-    audio = models.FileField(upload_to = settings.UNTRANSCODED_PREFIX + '/%Y/%m/%d')
+    audio = AudioVideoFileField(upload_to = settings.UNTRANSCODED_PREFIX + '/%Y/%m/%d',
+                                           # content_types=['video/*', 'audio/*'],
+                                           # max_upload_size=10485760,
+                                           blank=True,
+                                           null=True)
+
     transcodedPath = models.CharField(null = True, max_length = 1000)
     transcoded = models.BooleanField(default=False)
     transcribed = models.BooleanField(default=False)

@@ -19,4 +19,5 @@ def upload(request):
         if form.is_valid():
             form.save()
             return JsonResponse({'id': form.instance.id},status=200)
-    return HttpResponse('')
+        return JsonResponse({'error': form.errors}, status=400)
+    return HttpResponse(status=405)
