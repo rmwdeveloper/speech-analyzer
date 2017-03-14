@@ -1,5 +1,6 @@
 import os
 import ffmpy
+import sox
 from channels import Group
 from django.conf import settings
 
@@ -27,7 +28,7 @@ def getOutputDirectory(filename):
     base, name = os.path.split(subpath)
     transcoded_directory = createDirectory(base)
     old_filename, old_file_extension = os.path.splitext(name)
-    new_filename = old_filename + '.flac'
+    new_filename = old_filename + '.raw'
     return os.path.join(transcoded_directory, new_filename)
 
 def transcodeAudio(audio_instance):
@@ -39,17 +40,19 @@ def transcodeAudio(audio_instance):
     inputs[file.name] = None
     outputs[output_directory] = '-ar 16000 -ac 1 -y'
 
-    transcode = ffmpy.FFmpeg(
-        inputs=inputs,
-        outputs=outputs
-    )
-    print transcode.cmd
+    # transcode = ffmpy.FFmpeg(
+    #     inputs=inputs,
+    #     outputs=outputs
+    # )
+    tfm = sox.Transformer()
+    tfm.convert(samplerate=16000, n_channels=1)
+
     try:
-        transcode.run()
+        tfm.build(file.name, output_directory)
         audio_instance.transcoded = True
         audio_instance.audio.file.name = output_directory
         audio_instance.save()
-        Group('main').send({'text': 'Transcode Complete.'})
+        # Group('main').send({'text': 'Transcode Complete.'})
 
     except ffmpy.FFRuntimeError as e:
         pass

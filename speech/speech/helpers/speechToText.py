@@ -24,7 +24,7 @@ def transcribe(speech_file):
             'config': {
                 # There are a bunch of config options you can specify. See
                 # https://goo.gl/KPZn97 for the full list.
-                'encoding': 'FLAC',  # raw 16-bit signed LE samples
+                'encoding': 'LINEAR16',  # raw 16-bit signed LE samples
                 'sampleRate': 16000,  # 16 khz
                 # See http://g.co/cloud/speech/docs/languages for a list of
                 # supported languages.
