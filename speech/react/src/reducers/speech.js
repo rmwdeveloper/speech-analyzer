@@ -1,6 +1,7 @@
 import {
   LOAD_TRANSCRIPTION,
-  LOAD_TONE,
+  LOAD_DOCUMENT_TONE,
+  LOAD_SENTENCE_TONE,
   LOAD_AUDIO,
   START_ANALYSIS,
   END_ANALYSIS
@@ -23,6 +24,10 @@ export default function speech(state = initialState, action) {
     case LOAD_TRANSCRIPTION:
       newTranscriptions[action.id] = { transcription:action.transcription, confidence: action.confidence };
       return {...state, transcriptions: newTranscriptions};
+    case LOAD_DOCUMENT_TONE:
+      return state;
+    case LOAD_SENTENCE_TONE:
+      return state;
     case START_ANALYSIS:
       return state;
     case END_ANALYSIS:

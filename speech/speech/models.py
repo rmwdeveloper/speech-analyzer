@@ -14,8 +14,10 @@ class Audio(models.Model):
     transcoded = models.BooleanField(default=False)
     transcribed = models.BooleanField(default=False)
     toneAnalyzed = models.BooleanField(default=False)
+    documentTranscription = models.TextField(null=True, blank=True)
     # transcribedSpeech = models.TextField(null=True)
     # transcriptionConfidence = models.DecimalField(max_digits=5, decimal_places=5, null=True)
+
 
 class Transcription(models.Model):
     audio = models.ForeignKey(Audio)
@@ -23,10 +25,19 @@ class Transcription(models.Model):
     confidence = models.DecimalField(max_digits=5, decimal_places=5, null=True)
 
 class Tone(models.Model):
-    transcription = models.ForeignKey(Transcription)
+    # transcription = models.ForeignKey(Transcription)
     score = models.DecimalField(max_digits=5, decimal_places=5, null=True)
     toneName = models.CharField(null = True, max_length = 255)
     categoryName = models.CharField(null = True, max_length = 255)
+
+    class Meta:
+        abstract = True
+
+class DocumentTone(Tone):
+    document = models.ForeignKey(Audio)
+
+class SentenceTone(Tone):
+    sentence = models.ForeignKey(Transcription)
 
 # class Timestamp(models.Model):
 #     audio = models.ForeignKey(Audio)

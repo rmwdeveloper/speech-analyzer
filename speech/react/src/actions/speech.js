@@ -2,7 +2,8 @@
 import {
   SET_RUNTIME_VARIABLE,
   LOAD_TRANSCRIPTION,
-  LOAD_TONE,
+  LOAD_DOCUMENT_TONE,
+  LOAD_SENTENCE_TONE,
   LOAD_AUDIO,
   START_ANALYSIS,
   END_ANALYSIS
@@ -21,12 +22,20 @@ export function loadTranscription(data) {
   };
 }
 
-export function loadTone(data) {
-  const { toneName, score, categoryName, transcription } = data;
+export function loadDocumentTone(data) {
+  const { toneName, score, categoryName, relation } = data;
   return dispatch => {
-    dispatch({ type: LOAD_TRANSCRIPTION, toneName, score, categoryName, transcription });
+    dispatch({ type: LOAD_DOCUMENT_TONE, toneName, score, categoryName, relation });
   };
 }
+
+export function loadSentenceTone(data) {
+  const { toneName, score, categoryName, relation } = data;
+  return dispatch => {
+    dispatch({ type: LOAD_SENTENCE_TONE, toneName, score, categoryName, relation });
+  };
+}
+
 export function loadAudio(data) {
   const { name, id } = data;
   return dispatch => {

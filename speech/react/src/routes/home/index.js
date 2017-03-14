@@ -29,16 +29,19 @@ class HomePage extends React.Component {
   }
 
   recieveMessage(message) {
-    const {loadTranscription, loadTone, endAnalysis} = this.props;
+    const {loadTranscription, loadSentenceTone, loadDocumentTone, endAnalysis} = this.props;
     const data = JSON.parse(message.data);
-    console.log(data.type);
+    console.log('md', message.data);
     switch(data.type) {
       case 'loadTranscription':
         loadTranscription(data);
         break;
-      case 'loadTone':
-        loadTone(data);
+      case 'loadSentenceTone':
+        loadSentenceTone(data);
         break;
+      case 'loadDocumentTone':
+        loadDocumentTone(data);
+
       // case 'analysisComplete':
       //   endAnalysis();
         break;
