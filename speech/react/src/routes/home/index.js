@@ -30,8 +30,20 @@ class HomePage extends React.Component {
 
   recieveMessage(message) {
     const {loadTranscription, loadSentenceTone, loadDocumentTone, endAnalysis} = this.props;
-    const data = JSON.parse(message.data);
-    console.log('md', message.data);
+    let data = {};
+    try {
+      data = JSON.parse(message.data);
+    } catch(e) {
+      if (e instanceof SyntaxError) {
+        //todo: dispatch errors
+        console.log('syntax error..');
+      }
+      else {
+        console.log('some unknown error');
+      }
+      return null;
+    }
+
     switch(data.type) {
       case 'loadTranscription':
         loadTranscription(data);

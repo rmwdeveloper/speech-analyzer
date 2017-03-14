@@ -18,6 +18,6 @@ def upload(request):
         form = AudioForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return JsonResponse({'id': form.instance.id},status=200)
+            return JsonResponse({'id': form.instance.id, 'transcription': form.instance.documentTranscription},status=200)
         return JsonResponse({'error': form.errors}, status=400)
     return HttpResponse(status=405)
