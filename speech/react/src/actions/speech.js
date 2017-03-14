@@ -1,5 +1,5 @@
 // import fetch from '../core/fetch';
-import {baseUrl} from 'config';
+import {audioAPI, transcriptionAPI, documentToneAPI, sentenceToneAPI} from '../config';
 
 import {
   SET_RUNTIME_VARIABLE,
@@ -85,6 +85,12 @@ export function error(error) {
 
 export function initialize() {
   return dispatch => {
-    dispatch({ type: ERROR, error});
+    const response = fetch(audioAPI, {
+      method: 'get',
+    }).then(response => {
+      response.json().then(audioData => {
+        console.log(audioData);
+      });
+    });
   };
 }
