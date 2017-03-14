@@ -34,10 +34,10 @@ class Tone(models.Model):
         abstract = True
 
 class DocumentTone(Tone):
-    document = models.ForeignKey(Audio, related_name='tones')
+    document = models.ForeignKey(Audio, related_name='document_tones')
 
 class SentenceTone(Tone):
-    sentence = models.ForeignKey(Transcription, related_name='tones')
+    sentence = models.ForeignKey(Transcription, related_name='sentence_tones')
 
 # class Timestamp(models.Model):
 #     audio = models.ForeignKey(Audio)

@@ -6,10 +6,10 @@ from speech.api import viewsets
 
 api_router = routers.DefaultRouter()
 
+api_router.register('document_tone', viewsets.DocumentToneViewSet)
 api_router.register('audio', viewsets.AudioViewSet)
-# api_router.register('transcription', viewsets.TranscriptionViewSet)
-# api_router.register('document_tone', viewsets.DocumentToneViewSet)
-# api_router.register('sentence_tone', viewsets.SentenceToneViewSet)
+api_router.register('transcription', viewsets.TranscriptionViewSet)
+api_router.register('sentence_tone', viewsets.SentenceToneViewSet)
 
 
 
