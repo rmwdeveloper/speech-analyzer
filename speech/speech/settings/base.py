@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'rest_framework',
     'channels',
     'speech'
 ]
@@ -171,3 +172,11 @@ CHANNEL_LAYERS = {
 IBM_URL = "https://stream.watsonplatform.net/speech-to-text/api"
 IBM_USERNAME = ""
 IBM_PASSWORD = ""
+
+## REST API PERMISSIONS
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    )
+}

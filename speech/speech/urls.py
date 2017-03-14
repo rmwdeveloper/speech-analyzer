@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^upload/$', views.upload),
     url(r'^results/$', views.results),
     url(r'^admin/', admin.site.urls),
+    url(r'', include('speech.api.urls')),
 ]

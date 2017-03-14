@@ -11,7 +11,7 @@ class AnalysisRow extends Component {
 
   render() {
     console.log('props!', this.props);
-    return <div>Analysis row</div>;
+    return <div className={s.root}>Analysis row</div>;
   }
 }
 
