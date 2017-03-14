@@ -31,15 +31,16 @@ class HomePage extends React.Component {
   recieveMessage(message) {
     const {loadTranscription, loadSentenceTone, loadDocumentTone, endAnalysis} = this.props;
     let data = {};
+    console.log(message.data);
     try {
       data = JSON.parse(message.data);
     } catch(e) {
       if (e instanceof SyntaxError) {
         //todo: dispatch errors
-        console.log('syntax error..');
+        console.log('syntax error..', e);
       }
       else {
-        console.log('some unknown error');
+        console.log('some unknown error', e);
       }
       return null;
     }

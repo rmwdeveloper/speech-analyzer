@@ -1,3 +1,4 @@
+import json
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -12,7 +13,7 @@ from helpers.toneAnalyzer import analyzeTone
 def transcode(sender, instance, **kwargs):
     if kwargs.get('created', False):
         transcodeAudio(instance)
-        Group('main').send({'text': 'transcodeStart'})
+        Group('main').send({'text': json.dumps({'type':'transcodeStart'})})
 
 @receiver(post_save, sender=Audio)
 def speechToText(sender, instance, **kwargs):
