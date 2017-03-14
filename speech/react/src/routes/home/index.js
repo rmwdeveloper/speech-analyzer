@@ -1,11 +1,9 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Layout from '../../components/Layout';
-import UploadHOC from '../../components/Uploader';
-import UploadBox from '../../components/UploadBox';
 import s from './styles.css';
 import { title, html } from './index.md';
-import {acceptedAudioMimeTypes} from '../../config';
+
 import * as speechActions from '../../actions/speech';
 import ReconnectingWebsocket from 'reconnectingwebsocket';
 
@@ -74,11 +72,11 @@ class HomePage extends React.Component {
   }
 
   render() {
-    const Uploader = UploadHOC(UploadBox, '/upload', acceptedAudioMimeTypes );
+
 
     return (
       <Layout className={s.content}>
-        <Uploader {...this.props} />
+
         {/*<button onClick={this.sendMessage}> Send Message test </button>*/}
       </Layout>
     );
