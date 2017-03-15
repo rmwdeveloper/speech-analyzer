@@ -220,6 +220,13 @@ LOGGING = {
         'console': {
             'class': 'logging.StreamHandler',
         },
+        'globalFile': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'xlogger/global.log',
+            'maxBytes': LOGFILE_SIZE * 2,
+            'formatter': 'verbose'
+        },
         'toneAnalyzerFile': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
@@ -245,6 +252,11 @@ LOGGING = {
     'loggers': {
         'django.request': {
             'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'common.globalLogger': {
+            'handlers': ['globalFile', ],
             'level': 'DEBUG',
             'propagate': True,
         },

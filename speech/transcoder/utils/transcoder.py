@@ -1,6 +1,6 @@
 import os
 from django.conf import settings
-
+from common.globalLogger import GlobalLogger
 
 class Transcoder:
     def __init__(self, instance, transformer,  **kwargs):
@@ -12,6 +12,7 @@ class Transcoder:
         self.output_directory = self.getOutputDirectory()
         self.subpath = self.getSubpath(self.file.name)
         self.transcoded_prefix = settings.TRANSCODED_PREFIX
+        self.logger = GlobalLogger()
 
     def createDirectory(self, base):
 
@@ -36,6 +37,7 @@ class Transcoder:
         try:
             return self.transformer.convert()
         except AttributeError as e:
+            self.logger.error('Tried to transcode using the WebService but had a ClientError. {}'.format(e.message))
 
         # inputs = {}
         # outputs = {}
