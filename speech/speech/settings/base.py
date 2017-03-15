@@ -198,3 +198,70 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
     )
 }
+
+### LOGGIGN
+
+
+LOGFILE_SIZE = 1024 * 1024 * 10
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'datefmt': "%d/%b/%Y %H:%M:%S"
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+        'toneAnalyzerFile': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'xlogger/toneAnalysis.log',
+            'maxBytes': LOGFILE_SIZE,
+            'formatter': 'verbose'
+        },
+        'transcoderFile': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'xlogger/transcoder.log',
+            'maxBytes': LOGFILE_SIZE,
+            'formatter': 'verbose'
+        },
+        'transcriberFile': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'xlogger/transcriber.log',
+            'maxBytes': LOGFILE_SIZE,
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'transcoder.utils.transcoder': {
+            'handlers': ['transcoderFile', ],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'transcriber.utils.transcriber': {
+            'handlers': ['transcriberFile', ],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'toneAnalyzer.utils.toneAnalyzer': {
+            'handlers': ['toneAnalyzerFile', ],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}

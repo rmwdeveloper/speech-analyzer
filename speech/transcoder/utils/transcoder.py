@@ -1,11 +1,10 @@
 import os
-import ffmpy
-import sox
 from django.conf import settings
 
 
 class Transcoder:
-    def __init__(self, instance, **kwargs):
+    def __init__(self, instance, transformer,  **kwargs):
+        self.transformer = transformer
         self.instance = instance
         self.media_root = os.path.normpath(settings.MEDIA_ROOT)
         self.file = instance.audio.file ## Todo: Refactor. Making assumptions on how files are accessed
@@ -13,7 +12,6 @@ class Transcoder:
         self.output_directory = self.getOutputDirectory()
         self.subpath = self.getSubpath(self.file.name)
         self.transcoded_prefix = settings.TRANSCODED_PREFIX
-
 
     def createDirectory(self, base):
 
@@ -35,24 +33,29 @@ class Transcoder:
         return os.path.join(transcoded_directory, new_filename)
 
     def transcode(self):
-        inputs = {}
-        outputs = {}
-        inputs[self.file.name] = None
-        outputs[self.output_directory] = self.output_settings
-
-        tfm = sox.Transformer() ## TODO: add sample,rate, channels, and transformer to kwargs. Allow for plugging different
-                                ##transformers
-        tfm.convert(samplerate=16000, n_channels=1)
-
         try:
-            tfm.build(self.file.name, self.output_directory)
-            self.instance.transcoded = True
-            self.instance.transcoded_path = self.output_directory
-            self.instance.save()
+            return self.transformer.convert()
+        except AttributeError as e:
 
-        except ffmpy.FFRuntimeError as e:
-            pass
-            ## TODO: emit error, LOG IT
+        # inputs = {}
+        # outputs = {}
+        # inputs[self.file.name] = None
+        # outputs[self.output_directory] = self.output_settings
+
+        # tfm = sox.Transformer() ## TODO: add sample,rate, channels, and transformer to kwargs. Allow for plugging different
+        #                         ##transformers
+        # tfm.convert(samplerate=16000, n_channels=1)
+
+
+        # try:
+        #      tfm.build(self.file.name, self.output_directory)
+        #      self.instance.transcoded = True
+        #      self.instance.transcoded_path = self.output_directory
+        #      self.instance.save()
+        #
+        # except ffmpy.FFRuntimeError as e:
+        #     pass
+        #     ## TODO: emit error, LOG IT
 
 
 
