@@ -1,10 +1,7 @@
-from speech.models import Audio, Transcription, DocumentTone, SentenceTone
 from rest_framework import serializers
-
-
-
-
-
+from speech.models import Audio
+from transcriber.models import Transcription
+from toneAnalyzer.models import SentenceTone, DocumentTone
 
 
 

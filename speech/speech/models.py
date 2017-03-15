@@ -1,6 +1,7 @@
-from django.db import models
 from django.conf import settings
-from formatChecker import AudioVideoFileField
+from django.db import models
+
+from common.formatChecker import AudioVideoFileField
 
 
 class Audio(models.Model):
@@ -15,34 +16,3 @@ class Audio(models.Model):
     transcribed = models.BooleanField(default=False)
     toneAnalyzed = models.BooleanField(default=False)
     documentTranscription = models.TextField(null=True, blank=True)
-    # transcribedSpeech = models.TextField(null=True)
-    # transcriptionConfidence = models.DecimalField(max_digits=5, decimal_places=5, null=True)
-
-
-class Transcription(models.Model):
-    audio = models.ForeignKey(Audio, related_name='transcriptions')
-    transcription = models.TextField(null = True)
-    confidence = models.DecimalField(max_digits=5, decimal_places=5, null=True)
-
-class Tone(models.Model):
-    # transcription = models.ForeignKey(Transcription)
-    score = models.DecimalField(max_digits=5, decimal_places=5, null=True)
-    toneName = models.CharField(null = True, max_length = 255)
-    categoryName = models.CharField(null = True, max_length = 255)
-
-    class Meta:
-        abstract = True
-
-class DocumentTone(Tone):
-    document = models.ForeignKey(Audio, related_name='document_tones')
-
-class SentenceTone(Tone):
-    sentence = models.ForeignKey(Transcription, related_name='sentence_tones')
-
-# class Timestamp(models.Model):
-#     audio = models.ForeignKey(Audio)
-#     word = models.CharField(max_length =1000)
-#     timestampBegin = models.FloatField(null=True)
-#     timestampEnd = models.FloatField(null=True)
-
-from . import signals ## should be done with appconfig

@@ -30,18 +30,27 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',
-    'rest_framework',
-    'channels',
-    'speech'
+    'channels' ## not included in third party b/c made officially by Django
 ]
+LOCAL_APPS = [
+    'speech',
+    'toneAnalyzer',
+    'transcoder',
+    'transcriber',
+    'common'
+]
+THIRD_PARTY_APPS = [
+    'corsheaders',
+    'rest_framework'
+]
+INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -169,11 +178,16 @@ CHANNEL_LAYERS = {
 
 
 ### API Credentials
-IBM_URL = "https://stream.watsonplatform.net/speech-to-text/api"
-IBM_USERNAME = ""
-IBM_PASSWORD = ""
 
-## REST API PERMISSIONS
+IBM_URL = "https://stream.watsonplatform.net/speech-to-text/api"
+IBM_SPEECH_RECOGNITION_USERNAME = ""
+IBM_SPEECH_RECOGNITION_PASSWORD = ""
+IBM_TONE_ANALYZER_USERNAME = ""
+IBM_TONE_ANALYZER_PASSWORD = ""
+
+GOOGLE_KEY = "AIzaSyBdiYBptk8Hb0l9KUo5Tq0Atlm75z259Ac"
+
+## REST API
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (

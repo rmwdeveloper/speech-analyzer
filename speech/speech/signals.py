@@ -4,9 +4,9 @@ from django.dispatch import receiver
 
 from .models import Audio
 from channels import Group
-from helpers.transcoder import transcodeAudio
-from helpers.speechToText import callAPI
-from helpers.toneAnalyzer import analyzeTone
+from transcoder.utils import transcodeAudio
+from speechToText.utils import callAPI
+from toneAnalyzer.utils import toneAnalyzer as analyzeTone
 
 
 @receiver(post_save, sender=Audio)
