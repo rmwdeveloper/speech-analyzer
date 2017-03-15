@@ -4,7 +4,7 @@ from common.globalLogger import GlobalLogger
 
 class Transcoder:
     def __init__(self, instance, transformer,  **kwargs):
-        self.transformer = transformer
+        self.transformer = transformer()
         self.instance = instance
         self.media_root = os.path.normpath(settings.MEDIA_ROOT)
         self.file = instance.audio.file ## Todo: Refactor. Making assumptions on how files are accessed
@@ -37,20 +37,10 @@ class Transcoder:
         try:
             return self.transformer.convert()
         except AttributeError as e:
-            self.logger.error('Tried to transcode using the WebService but had a ClientError. {}'.format(e.message))
-
-        # inputs = {}
-        # outputs = {}
-        # inputs[self.file.name] = None
-        # outputs[self.output_directory] = self.output_settings
-
-        # tfm = sox.Transformer() ## TODO: add sample,rate, channels, and transformer to kwargs. Allow for plugging different
-        #                         ##transformers
-        # tfm.convert(samplerate=16000, n_channels=1)
+            self.logger.error('Tried to transcode using the WebService but had a ClientError. %s' % (e.message,))
 
 
         # try:
-        #      tfm.build(self.file.name, self.output_directory)
         #      self.instance.transcoded = True
         #      self.instance.transcoded_path = self.output_directory
         #      self.instance.save()

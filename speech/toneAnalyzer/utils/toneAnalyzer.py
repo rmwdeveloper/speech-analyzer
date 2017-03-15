@@ -4,6 +4,7 @@ from django.conf import settings
 from speech.models import Transcription, DocumentTone, SentenceTone
 from channels import Group
 
+## TODO : Convert tone analyzer to a class.
 def analyzeTone(instance):
     tone_analyzer = ToneAnalyzerV3(
         username=settings.IBM_TONE_ANALYZER_USERNAME,
