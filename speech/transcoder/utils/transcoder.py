@@ -5,14 +5,14 @@ from common.globalLogger import GlobalLogger
 class Transcoder:
     def __init__(self, instance, transformer,  **kwargs):
         self.transformer = transformer()
-        self.instance = instance
+        self.transcoded_prefix = settings.TRANSCODED_PREFIX
+        self.file = instance.audio.file ## Refactor ? Making assumptions on how files are accessed.
         self.media_root = os.path.normpath(settings.MEDIA_ROOT)
-        self.file = instance.audio.file ## Todo: Refactor. Making assumptions on how files are accessed
+        self.subpath = self.getSubpath(self.file.name)
+        self.instance = instance
         self.output_settings = kwargs.get('output_settings', '-ar 16000 -ac 1 -y')
         self.output_directory = self.getOutputDirectory()
-        self.subpath = self.getSubpath(self.file.name)
-        self.transcoded_prefix = settings.TRANSCODED_PREFIX
-        self.logger = GlobalLogger()
+        self.logger = GlobalLogger
 
     def createDirectory(self, base):
 
@@ -35,19 +35,10 @@ class Transcoder:
 
     def transcode(self):
         try:
-            return self.transformer.convert()
+            self.transformer.convert(self.file.name, self.output_directory)
+            return self.output_directory
         except AttributeError as e:
-            self.logger.error('Tried to transcode using the WebService but had a ClientError. %s' % (e.message,))
-
-
-        # try:
-        #      self.instance.transcoded = True
-        #      self.instance.transcoded_path = self.output_directory
-        #      self.instance.save()
-        #
-        # except ffmpy.FFRuntimeError as e:
-        #     pass
-        #     ## TODO: emit error, LOG IT
-
-
+            self.logger.error('Tried to transcode using the WebService but had an AttributeErro. %s' % (e.message,))
+        except Exception as e:
+            self.logger.error('Tried to Transcode. %s' % (e.message,))
 

@@ -16,3 +16,6 @@ class Audio(models.Model):
     transcribed = models.BooleanField(default=False)
     toneAnalyzed = models.BooleanField(default=False)
     documentTranscription = models.TextField(null=True, blank=True)
+
+
+from . import signals ## should be done with appconfig

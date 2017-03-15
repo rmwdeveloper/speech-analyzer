@@ -1,9 +1,9 @@
-import json
-from channels import Group
+# import json
+# from channels import Group
 import base64
-import time
-from django.conf import settings
-from speech.models import Transcription
+# import time
+# from django.conf import settings
+# from transcriber.models import Transcription
 
 class Transcriber:
     def __init__(self, instance, transcription_service):
