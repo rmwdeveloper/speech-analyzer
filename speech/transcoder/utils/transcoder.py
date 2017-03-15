@@ -1,59 +1,58 @@
 import os
 import ffmpy
 import sox
-from channels import Group
 from django.conf import settings
 
-## TODO : would be better as a class.. lots of duplication here
 
-def getSubpath(filename):
-    media_root = os.path.normpath(settings.MEDIA_ROOT)
-    untranscoded_prefix = settings.UNTRANSCODED_PREFIX
-    return filename.replace(os.path.join(media_root, untranscoded_prefix), '')
+class Transcoder:
+    def __init__(self, instance, **kwargs):
+        self.instance = instance
+        self.media_root = os.path.normpath(settings.MEDIA_ROOT)
+        self.file = instance.audio.file ## Todo: Refactor. Making assumptions on how files are accessed
+        self.output_settings = kwargs.get('output_settings', '-ar 16000 -ac 1 -y')
+        self.output_directory = self.getOutputDirectory()
+        self.subpath = self.getSubpath(self.file.name)
+        self.transcoded_prefix = settings.TRANSCODED_PREFIX
 
-def changeFileExtension(base):
-    new_name = os.path.splitext(base)[0]
 
-def createDirectory(base):
-    media_root = os.path.normpath(settings.MEDIA_ROOT)
-    transcoded_prefix = settings.TRANSCODED_PREFIX
-    stripped_base = base.lstrip(os.path.sep)
-    new_directory = os.path.join(media_root, transcoded_prefix, stripped_base)
-    if not os.path.exists(new_directory):
-        os.makedirs(new_directory)
-    return new_directory
+    def createDirectory(self, base):
 
-def getOutputDirectory(filename):
-    subpath = getSubpath(filename)
-    base, name = os.path.split(subpath)
-    transcoded_directory = createDirectory(base)
-    old_filename, old_file_extension = os.path.splitext(name)
-    new_filename = old_filename + '.raw'
-    return os.path.join(transcoded_directory, new_filename)
+        stripped_base = base.lstrip(os.path.sep)
+        new_directory = os.path.join(self.media_root, self.transcoded_prefix, stripped_base)
+        if not os.path.exists(new_directory):
+            os.makedirs(new_directory)
+        return new_directory
 
-def transcodeAudio(audio_instance):
-    file = audio_instance.audio.file
+    def getSubpath(self, filename):
+        untranscoded_prefix = settings.UNTRANSCODED_PREFIX
+        return filename.replace(os.path.join(self.media_root, untranscoded_prefix), '')
 
-    inputs = {}
-    outputs = {}
-    output_directory = getOutputDirectory(file.name)
-    inputs[file.name] = None
-    outputs[output_directory] = '-ar 16000 -ac 1 -y'
+    def getOutputDirectory(self):
+        base, name = os.path.split(self.subpath)
+        transcoded_directory = self.createDirectory(base)
+        old_filename, old_file_extension = os.path.splitext(name)
+        new_filename = old_filename + '.raw'
+        return os.path.join(transcoded_directory, new_filename)
 
-    # transcode = ffmpy.FFmpeg(
-    #     inputs=inputs,
-    #     outputs=outputs
-    # )
-    tfm = sox.Transformer()
-    tfm.convert(samplerate=16000, n_channels=1)
+    def transcode(self):
+        inputs = {}
+        outputs = {}
+        inputs[self.file.name] = None
+        outputs[self.output_directory] = self.output_settings
 
-    try:
-        tfm.build(file.name, output_directory)
-        audio_instance.transcoded = True
-        audio_instance.transcoded_path = output_directory
-        audio_instance.save()
-        # Group('main').send({'text': 'Transcode Complete.'})
+        tfm = sox.Transformer() ## TODO: add sample,rate, channels, and transformer to kwargs. Allow for plugging different
+                                ##transformers
+        tfm.convert(samplerate=16000, n_channels=1)
 
-    except ffmpy.FFRuntimeError as e:
-        pass
-        ## TODO: emit error, LOG IT
+        try:
+            tfm.build(self.file.name, self.output_directory)
+            self.instance.transcoded = True
+            self.instance.transcoded_path = self.output_directory
+            self.instance.save()
+
+        except ffmpy.FFRuntimeError as e:
+            pass
+            ## TODO: emit error, LOG IT
+
+
+
