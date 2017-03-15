@@ -17,9 +17,7 @@ import UploadHOC from '../../components/Uploader';
 import UploadBox from '../../components/UploadBox';
 import * as speechActions from '../../actions/speech';
 
-@connect(state => ({
-
-}), { ...speechActions })
+@connect(null, { ...speechActions })
 class Navigation extends React.Component {
 
   componentDidMount() {

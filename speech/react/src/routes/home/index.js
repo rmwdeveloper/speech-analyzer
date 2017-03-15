@@ -63,7 +63,10 @@ class HomePage extends React.Component {
     }
   }
   componentWillMount() {
-    // this.props.initialize();
+    this.props.initialize();
+  }
+  shouldComponentUpdate() {
+    return false;
   }
   componentDidMount() {
     document.title = title;

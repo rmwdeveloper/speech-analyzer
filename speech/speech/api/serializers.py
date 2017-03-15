@@ -23,14 +23,15 @@ class DocumentToneSerializer(serializers.ModelSerializer):
 
 
 class TranscriptionSerializer(serializers.ModelSerializer):
-    sentence_tones = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='sentencetone-detail')
+    sentence_tones = SentenceToneSerializer(many=True, read_only=True)
+    # sentence_tones = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='sentencetone-detail')
     class Meta:
         model = Transcription
         fields = ('id', 'transcription', 'confidence', 'audio', 'sentence_tones')
 
 
 class AudioSerializer(serializers.ModelSerializer):
-    document_tones  = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='documenttone-detail')
+    document_tones  = DocumentToneSerializer(many=True, read_only=True)
     transcriptions  = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='transcription-detail')
     class Meta:
         model = Audio

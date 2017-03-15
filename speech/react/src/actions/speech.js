@@ -1,5 +1,7 @@
 // import fetch from '../core/fetch';
 import {audioAPI, transcriptionAPI, documentToneAPI, sentenceToneAPI} from '../config';
+const forEach = require('async-foreach').forEach;
+
 
 import {
   SET_RUNTIME_VARIABLE,
@@ -12,6 +14,7 @@ import {
   ERROR,
   INITIALIZE
 } from '../constants';
+
 
 
 export function setRuntimeVariable() {
@@ -83,14 +86,66 @@ export function error(error) {
   };
 }
 
+
 export function initialize() {
   return dispatch => {
+    const headers = new Headers(); // todo: abstract away into own module
+    headers.append('Content-Type', 'application/json');
+
     const response = fetch(audioAPI, {
-      method: 'get',
+      method: 'get', headers
     }).then(response => {
-      response.json().then(audioData => {
-        console.log(audioData);
-      });
-    });
+      response.json().then(audioBody => {
+        forEach(audioBody, (data) => {
+            dispatch({ type: LOAD_AUDIO, name: data.audio.substring(data.audio.lastIndexOf('/')+1) , id: data.id,
+              uploadId: data.id });
+          forEach(data.transcriptions, (transcription) => {
+              fetch(transcription, {method:'get', headers}).then(transcriptionResponse=> {
+              transcriptionResponse.json().then(transcriptionBody=> {
+                const { transcription, confidence, id, audio} = transcriptionBody;
+                 dispatch({ type: LOAD_TRANSCRIPTION, transcription, confidence, id, relation: audio });
+                    transcriptionBody.sentence_tones.forEach(sentence_tone => {
+                  const { id, score, toneName, categoryName } = sentence_tone;
+                  dispatch({ type: LOAD_SENTENCE_TONE, id, toneName, score, categoryName, relation: transcriptionBody.id });
+                });
+              })
+            })
+          });
+          // forEach(data.documument_tones, (document_tone) => {
+          //   const { id, score, toneName, categoryName } = document_tone;
+          //   dispatch({ type: LOAD_DOCUMENT_TONE, id, toneName, score, categoryName, relation: data.id });
+          // });
+        });
+        // audioBody.forEach(data => {
+        //
+        //   dispatch({ type: LOAD_AUDIO, name: data.audio.substring(data.audio.lastIndexOf('/')+1) , id: data.id,
+        //     uploadId: data.id });
+
+          // data.transcriptions.forEach(transcription => {
+          //   fetch(transcription, {method:'get', headers}).then(transcriptionResponse=> {
+          //     transcriptionResponse.json().then(transcriptionBody=> {
+          //       const { transcription, confidence, id, audio} = transcriptionBody;
+          //        dispatch({ type: LOAD_TRANSCRIPTION, transcription, confidence, id, relation: audio });
+          //       transcriptionBody.sentence_tones.forEach(sentence_tone => {
+          //         const { id, score, toneName, categoryName } = sentence_tone;
+          //         dispatch({ type: LOAD_SENTENCE_TONE, id, toneName, score, categoryName, relation: transcriptionBody.id });
+          //       });
+          //     })
+          //   })
+          // });
+
+          // data.document_tones.forEach(document_tone => {
+          //   const { id, score, toneName, categoryName } = document_tone;
+          //   dispatch({ type: LOAD_DOCUMENT_TONE, id, toneName, score, categoryName, relation: data.id });
+          // });
+        // })
+
+      }).catch(error => {
+        console.log(error);
+        dispatch({ type: ERROR, error});
+      })
+    }).catch(error => {
+      dispatch({ type: ERROR, error});
+    })
   };
 }
