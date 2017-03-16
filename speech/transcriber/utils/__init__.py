@@ -1,2 +1,2 @@
-from .googleTranscriber import *
-from .transcriber import *
+from .googleTranscriber import GoogleTranscriber
+from .transcriber import Transcriber

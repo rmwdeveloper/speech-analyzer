@@ -7,7 +7,7 @@ from channels import Group
 from transcoder.utils import SoxTransformer, Transcoder
 from transcriber.utils import Transcriber, GoogleTranscriber
 from transcriber.models import Transcription
-# from toneAnalyzer.utils.toneAnalyzer import ToneAnalyzer
+from toneAnalyzer.utils import ToneAnalyzer
 
 
 @receiver(post_save, sender=Audio)
@@ -39,12 +39,12 @@ def speechToText(sender, instance, **kwargs):
         instance.documentTranscription = document_text
         instance.save()
 
-#
-# @receiver(post_save, sender=Audio)
-# def analyze(sender, instance, **kwargs):
-#     if not kwargs.get('created', False) and instance.transcribed  and not instance.toneAnalyzed:
-#         ##todo: delete audio files
-#         ToneAnalyzer(instance).analyze()
-#
-#
-#
+
+@receiver(post_save, sender=Audio)
+def analyze(sender, instance, **kwargs):
+    if not kwargs.get('created', False) and instance.transcribed  and not instance.toneAnalyzed:
+        ##todo: delete audio files
+        ToneAnalyzer(instance).analyze()
+
+
+

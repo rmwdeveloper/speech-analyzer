@@ -1,7 +1,9 @@
 import json
-from watson_developer_cloud import ToneAnalyzerV3
+# from watson_developer_cloud import ToneAnalyzerV3
 from django.conf import settings
-from speech.models import Transcription, DocumentTone, SentenceTone
+from transcriber.models import Transcription
+from toneAnalyzer.models import DocumentTone, SentenceTone
+
 from channels import Group
 
 ## TODO : Convert tone analyzer to a class.
