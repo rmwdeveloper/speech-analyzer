@@ -1,0 +1,121 @@
+import time
+import os.path
+import hashlib
+import uuid
+
+from django.db import models
+from django.conf import settings
+from django.core.files.uploadedfile import UploadedFile
+from django.utils import timezone
+from django.conf import settings
+
+# from .settings import EXPIRATION_DELTA, UPLOAD_PATH, STORAGE, ABSTRACT_MODEL
+# from .constants import CHUNKED_UPLOAD_CHOICES, UPLOADING
+#
+# AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
+
+
+def generate_upload_id():
+    return uuid.uuid4().hex
+
+
+def generate_filename(instance, filename):
+    filename = os.path.join('temporary' + '/%Y/%m/%d')
+    return time.strftime(filename)
+
+
+class BaseChunkedUpload(models.Model):
+    """
+    Base chunked upload model. This model is abstract (doesn't create a table
+    in the database).
+    Inherit from this model to implement your own.
+    """
+
+    file = models.FileField(max_length=255, upload_to='temporary/%Y/%m/%d')
+    resumableFilename = models.CharField(max_length=1000, null=True)
+    resumableChunkNumber = models.IntegerField(null=True)
+    resumableChunkSize = models.IntegerField(null=True)
+    resumableCurrentChunkSize = models.IntegerField(null=True)
+    resumableIdentifier = models.CharField(max_length = 1000, null=True)
+    resumableRelativePath = models.CharField(max_length=1000, null=True)
+    resumableTotalChunks = models.IntegerField(null=True)
+    resumableTotalSize = models.IntegerField(null=True)
+    resumableType = models.CharField(max_length=1000, null=True)
+
+
+    # status = models.PositiveSmallIntegerField(choices=CHUNKED_UPLOAD_CHOICES,
+    #                                           default=UPLOADING)
+    # completed_on = models.DateTimeField(null=True, blank=True)
+
+    # @property
+    # def expires_on(self):
+    #     return self.created_on + EXPIRATION_DELTA
+    #
+    # @property
+    # def expired(self):
+    #     return self.expires_on <= timezone.now()
+    #
+    # @property
+    # def md5(self):
+    #     if getattr(self, '_md5', None) is None:
+    #         md5 = hashlib.md5()
+    #         for chunk in self.file.chunks():
+    #             md5.update(chunk)
+    #         self._md5 = md5.hexdigest()
+    #     return self._md5
+
+    # def delete(self, delete_file=True, *args, **kwargs):
+    #     if self.file:
+    #         storage, path = self.file.storage, self.file.path
+    #     super(BaseChunkedUpload, self).delete(*args, **kwargs)
+    #     if self.file and delete_file:
+    #         storage.delete(path)
+    #
+    # def __unicode__(self):
+    #     return u'<%s - upload_id: %s - bytes: %s - status: %s>' % (
+    #         self.filename, self.upload_id, self.offset, self.status)
+    #
+    # def close_file(self):
+    #     """
+    #     Bug in django 1.4: FieldFile `close` method is not reaching all the
+    #     way to the actual python file.
+    #     Fix: we had to loop all inner files and close them manually.
+    #     """
+    #     file_ = self.file
+    #     while file_ is not None:
+    #         file_.close()
+    #         file_ = getattr(file_, 'file', None)
+    #
+    # def append_chunk(self, chunk, chunk_size=None, save=True):
+    #     self.close_file()
+    #     self.file.open(mode='ab')  # mode = append+binary
+    #     # We can use .read() safely because chunk is already in memory
+    #     self.file.write(chunk.read())
+    #     if chunk_size is not None:
+    #         self.offset += chunk_size
+    #     elif hasattr(chunk, 'size'):
+    #         self.offset += chunk.size
+    #     else:
+    #         self.offset = self.file.size
+    #     self._md5 = None  # Clear cached md5
+    #     if save:
+    #         self.save()
+    #     self.close_file()  # Flush
+    #
+    # def get_uploaded_file(self):
+    #     self.close_file()
+    #     self.file.open(mode='rb')  # mode = read+binary
+    #     return UploadedFile(file=self.file, name=self.filename,
+    #                         size=self.offset)
+
+    class Meta:
+        abstract = True
+
+
+class ChunkedUpload(BaseChunkedUpload):
+    """
+    Default chunked upload model.
+    To use it, set CHUNKED_UPLOAD_ABSTRACT_MODEL as True in your settings.
+    """
+
+    pass

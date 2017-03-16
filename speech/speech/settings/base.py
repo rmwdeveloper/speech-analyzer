@@ -44,6 +44,7 @@ LOCAL_APPS = [
     'toneAnalyzer',
     'transcoder',
     'transcriber',
+    'chunkedUpload',
     'common'
 ]
 THIRD_PARTY_APPS = [
