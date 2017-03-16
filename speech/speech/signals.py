@@ -7,8 +7,8 @@ from channels import Group
 from transcoder.utils import SoxTransformer, Transcoder
 from transcriber.utils import Transcriber, GoogleTranscriber
 from transcriber.models import Transcription
-from toneAnalyzer.utils import ToneAnalyzer
-
+from toneAnalyzer.utils import ToneAnalyzer, WatsonToneAnalyzer
+from toneAnalyzer.models import DocumentTone, SentenceTone
 
 @receiver(post_save, sender=Audio)
 def transcode(sender, instance, **kwargs):
@@ -44,7 +44,21 @@ def speechToText(sender, instance, **kwargs):
 def analyze(sender, instance, **kwargs):
     if not kwargs.get('created', False) and instance.transcribed  and not instance.toneAnalyzed:
         ##todo: delete audio files
-        ToneAnalyzer(instance).analyze()
+        transcriptions = Transcription.objects.filter(audio=instance)
+        tone_analyzer = ToneAnalyzer(transcriptions, WatsonToneAnalyzer)
+        tones = tone_analyzer.analyze(instance.documentTranscription)
+
+        for categories in tones['document_tone']['tone_categories']:
+            for tone in categories['tones']:
+                DocumentTone.objects.create(document=instance, score=tone['score'],
+                                            toneName=tone['tone_name'],
+                                            categoryName=categories['category_name'])
 
 
-
+        for transcription in transcriptions:
+            tones =  tone_analyzer.analyze(transcription.transcription)
+            for categories in tones['document_tone']['tone_categories']:
+                for tone in categories['tones']:
+                    SentenceTone.objects.create(sentence=transcription, score=tone['score'],
+                                                toneName=tone['tone_name'],
+                                                categoryName=categories['category_name'])
