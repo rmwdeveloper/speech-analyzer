@@ -49,7 +49,8 @@ LOCAL_APPS = [
 ]
 THIRD_PARTY_APPS = [
     'corsheaders',
-    'rest_framework'
+    'rest_framework',
+    # 'django_cleanup'
 ]
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 

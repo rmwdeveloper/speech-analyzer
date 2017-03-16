@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^$', views.index),
     url(r'^test_celery/$', views.test_celery),
     url(r'^upload/$', views.upload),
+    url(r'^upload_complete/$', views.upload_complete),
     url(r'^results/$', views.results),
     url(r'^admin/', admin.site.urls),
     url(r'', include('speech.api.urls')),

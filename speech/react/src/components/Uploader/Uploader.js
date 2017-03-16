@@ -27,6 +27,17 @@ export default function uploader(WrappedComponent, uploadUrl, acceptedFiles) {
       this.resumable.on('fileAdded', (file) => {
         this.resumable.upload();
       });
+      this.resumable.on('progress', () => {
+        console.log(this.resumable.progress());
+
+      });
+      this.resumable.on('complete', (file) => {
+        fetch('http://localhost:8000/upload_complete/', {method: 'get', } ).then(response => {
+          }).catch(error => {
+            this.props.error(error);
+            console.log('error',error);
+          })
+      });
       this.resumable.assignBrowse(this.uploader);
 
       // this.dropzone = new Dropzone(this.uploader, {url: uploadUrl,
@@ -41,15 +52,15 @@ export default function uploader(WrappedComponent, uploadUrl, acceptedFiles) {
       //     data.append('audio', file);
       //     const uploadId = uuidV4();
       //     this.props.startAnalysis(uploadId);
-      //     // fetch('http://localhost:8000/upload/', {method: 'post', body: data } ).then(response => {
-      //     //   response.json().then(body => {
-      //     //     this.props.loadAudio({id: body.id, name: file.name, uploadId});
-      //     //
-      //     //   })
-      //     // }).catch(error => {
-      //     //   this.props.error(error);
-      //     //   console.log('error',error);
-      //     // })
+      //     fetch('http://localhost:8000/upload/', {method: 'post', body: data } ).then(response => {
+      //       response.json().then(body => {
+      //         this.props.loadAudio({id: body.id, name: file.name, uploadId});
+      //
+      //       })
+      //     }).catch(error => {
+      //       this.props.error(error);
+      //       console.log('error',error);
+      //     })
       //
       //   }
       // });
