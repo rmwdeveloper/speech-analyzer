@@ -19,7 +19,7 @@ class AudioVideoFileField(FileField):
     """
     def __init__(self, *args, **kwargs):
 
-        self.max_upload_size = kwargs.get("max_upload_size",10485760 )
+        self.max_upload_size = kwargs.get("max_upload_size",1000000000 )
 
         super(AudioVideoFileField, self).__init__(*args, **kwargs)
 

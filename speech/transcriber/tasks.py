@@ -1,18 +1,18 @@
 # Create your tasks here
 from __future__ import absolute_import, unicode_literals
-import django
-django.setup()
 from celery import shared_task
-import time
-from speech.models import Test
 
 
 @shared_task
-def test():
-    time.sleep(3)
-    return 'Test test test test'
+def transcribeTask(instance, transcoder, transformer):
+    pass
+    # return (instance, transcoder(instance, transformer).transcode())
 
 
 @shared_task
-def myCallback(message):
-    Test.objects.create(text=message)
+def saveTranscription(*args, **kwargs):
+    pass
+    # args[0][0].transcoded = True
+    # args[0][0].transcoded_path = args[0][1]
+    # args[0][0].save()
+

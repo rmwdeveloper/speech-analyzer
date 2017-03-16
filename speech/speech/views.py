@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from .forms import AudioForm
 
-from transcriber.tasks import test, myCallback
+# from transcriber.tasks import  myCallback
 
 @csrf_exempt
 def index(request):
@@ -11,7 +11,7 @@ def index(request):
 
 @csrf_exempt
 def test_celery(request):
-    test.apply_async(link=myCallback.s())
+    # test.apply_async(link=myCallback.s())
     return HttpResponse('test_celery')
 
 @csrf_exempt
@@ -22,8 +22,9 @@ def results(request):
 def upload(request):
     if request.method == 'POST':
         form = AudioForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return JsonResponse({'id': form.instance.id, 'transcription': form.instance.documentTranscription},status=200)
-        return JsonResponse({'error': form.errors}, status=400)
+        return JsonResponse({'message': 'OK!'})
+        # if form.is_valid():
+        #     form.save()
+        #     return JsonResponse({'id': form.instance.id, 'transcription': form.instance.documentTranscription},status=200)
+        # return JsonResponse({'error': form.errors}, status=400)
     return HttpResponse(status=405)
