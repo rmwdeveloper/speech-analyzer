@@ -1,8 +1,7 @@
 import time
 import googleapiclient.discovery
-import json
-from channels import Group
-from transcriber.models import Transcription
+
+from django.conf import settings
 
 class GoogleTranscriber:
 
@@ -39,19 +38,3 @@ class GoogleTranscriber:
                 break
         return response
 
-    # def saveData(self, response, instance):
-    #     document_text = ''
-    #
-    #     for result in response['response'].get('results', []):
-    #         for alternative in result['alternatives']:
-    #             document_text = ' ' + document_text + ' ' + alternative['transcript'] + '.'
-    #             transcript_instance = Transcription.objects.create(audio=instance,
-    #                                                                transcription=alternative['transcript'],
-    #                                                                confidence=alternative['confidence'])
-    #             Group('main').send(
-    #                 {'text': json.dumps({'transcription': alternative['transcript'], 'type': 'loadTranscription',
-    #                                      'relation': instance.id,
-    #                                      'id': transcript_instance.id, 'confidence': alternative['confidence']})})
-    #     instance.transcribed = True
-    #     instance.documentTranscription = document_text
-    #     instance.save()

@@ -5,7 +5,7 @@ class SoxTransformer:
     def __init__(self):
         self.logger = GlobalLogger
 
-    def transcode(self, filename, output_directory):
+    def convert(self, filename, output_directory):
 
         tfm = sox.Transformer()
 
