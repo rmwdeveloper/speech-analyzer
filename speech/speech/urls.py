@@ -20,6 +20,7 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index),
+    url(r'^test_celery/$', views.test_celery),
     url(r'^upload/$', views.upload),
     url(r'^results/$', views.results),
     url(r'^admin/', admin.site.urls),

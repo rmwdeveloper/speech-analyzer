@@ -3,10 +3,16 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from .forms import AudioForm
 
+from transcriber.tasks import test
 
 @csrf_exempt
 def index(request):
     return render(request, 'index.html')
+
+@csrf_exempt
+def test_celery(request):
+    test.apply_async()
+    return HttpResponse('test_celery')
 
 @csrf_exempt
 def results(request):
