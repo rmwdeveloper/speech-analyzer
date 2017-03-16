@@ -17,5 +17,6 @@ class Audio(models.Model):
     toneAnalyzed = models.BooleanField(default=False)
     documentTranscription = models.TextField(null=True, blank=True)
 
-
+class Test(models.Model): ## todo delete this
+    text = models.CharField(max_length=255)
 from . import signals ## should be done with appconfig

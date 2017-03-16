@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from .forms import AudioForm
 
-from transcriber.tasks import test
+from transcriber.tasks import test, myCallback
 
 @csrf_exempt
 def index(request):
@@ -11,7 +11,7 @@ def index(request):
 
 @csrf_exempt
 def test_celery(request):
-    test.apply_async()
+    test.apply_async(link=myCallback.s())
     return HttpResponse('test_celery')
 
 @csrf_exempt
