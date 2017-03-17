@@ -21,7 +21,6 @@ def transcode(sender, instance, **kwargs):
 @receiver(post_save, sender=Audio)
 def speechToText(sender, instance, **kwargs):
     if not kwargs.get('created', False) and not instance.transcribed:
-        print 'test test test test test test test'
         pass
         # response = Transcriber(instance, GoogleTranscriber).transcribe()
         #
