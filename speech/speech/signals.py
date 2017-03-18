@@ -8,6 +8,7 @@ from transcoder.utils import SoxTransformer, Transcoder
 from transcoder.tasks import transcodeTask, saveTranscode
 from transcriber.utils import Transcriber, GoogleTranscriber
 from transcriber.models import Transcription
+from transcriber.tasks import transcribeTask, saveTranscription
 from toneAnalyzer.utils import ToneAnalyzer, WatsonToneAnalyzer
 from toneAnalyzer.models import DocumentTone, SentenceTone
 
@@ -20,7 +21,9 @@ def transcode(sender, instance, **kwargs):
 @receiver(post_save, sender=Audio)
 def speechToText(sender, instance, **kwargs):
     if not kwargs.get('created', False) and not instance.transcribed:
-        pass
+        print 'about to transcribe..'
+        transcribeTask.apply_async((instance, Transcriber, GoogleTranscriber), link=saveTranscription.s())
+
         # response = Transcriber(instance, GoogleTranscriber).transcribe()
         #
         # document_text = ''

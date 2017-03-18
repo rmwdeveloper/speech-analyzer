@@ -13,6 +13,7 @@ def concatenateChunks(identifier):
                 newFile.write(chunkFile.read())
             chunkFile.close()
             chunk.delete()
+        newFile.close()
 
 
     audio = Audio()

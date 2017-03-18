@@ -8,5 +8,4 @@ from .models import ChunkedUpload
 @receiver(pre_delete, sender=ChunkedUpload) ## todo move to own signals.py
 def deleteFile(sender, instance, **kwargs):
     default_storage.delete(instance.file.path)
-    print 'deleted %s from filesystem' % (instance.file.path,)
 
