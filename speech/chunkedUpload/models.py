@@ -36,8 +36,7 @@ class ChunkedUpload(BaseChunkedUpload):
 
 @receiver(pre_delete, sender=ChunkedUpload)
 def deleteFile(sender, instance, **kwargs):
-    try:
-        os.remove(instance.file.path)
-    except Exception as e:
-        pass ## TODO : log error. figure out why files are being locked.
+    print 'trying to delete %s' % (instance.file.path, )
+    os.remove(instance.file.path)
+
 
