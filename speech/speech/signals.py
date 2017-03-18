@@ -15,7 +15,6 @@ from toneAnalyzer.models import DocumentTone, SentenceTone
 def transcode(sender, instance, **kwargs):
     if kwargs.get('created', False):
         transcodeTask.apply_async((instance, Transcoder, SoxTransformer), link=saveTranscode.s())
-        return None
 
 
 @receiver(post_save, sender=Audio)

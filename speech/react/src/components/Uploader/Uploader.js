@@ -31,8 +31,14 @@ export default function uploader(WrappedComponent, uploadUrl, acceptedFiles) {
         console.log(this.resumable.progress());
 
       });
-      this.resumable.on('complete', (file) => {
-        fetch('http://localhost:8000/upload_complete/', {method: 'get', } ).then(response => {
+      this.resumable.on('complete', () => {
+        //todo: handle multiple uploads ..?
+
+        const uploadId = this.resumable.files[0].uniqueIdentifier;
+        const data = new FormData();
+        data.append('uploadId', uploadId);
+        fetch('http://localhost:8000/upload_complete/', {method: 'post',body:data }
+        ).then(response => {
           }).catch(error => {
             this.props.error(error);
             console.log('error',error);

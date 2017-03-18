@@ -1,7 +1,5 @@
-import os
 from django.db import models
-from django.db.models.signals import pre_delete
-from django.dispatch import receiver
+
 
 
 class BaseChunkedUpload(models.Model):
@@ -34,9 +32,4 @@ class ChunkedUpload(BaseChunkedUpload):
     """
     pass
 
-@receiver(pre_delete, sender=ChunkedUpload)
-def deleteFile(sender, instance, **kwargs):
-    print 'trying to delete %s' % (instance.file.path, )
-    os.remove(instance.file.path)
-
-
+from . import signals ## should be done with appconfig
