@@ -169,8 +169,8 @@ CORS_ALLOW_HEADERS = (
 
 CHANNEL_LAYERS = {
     "default": {
-        # "BACKEND": "asgiref.inmemory.ChannelLayer",
-        "BACKEND": "asgi_redis.RedisChannelLayer",
+        "BACKEND": "asgiref.inmemory.ChannelLayer",
+        # "BACKEND": "asgi_redis.RedisChannelLayer",
         # "CONFIG": {
         #     "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
         # },
