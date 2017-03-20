@@ -21,7 +21,6 @@ def transcode(sender, instance, **kwargs):
 @receiver(post_save, sender=Audio)
 def speechToText(sender, instance, **kwargs):
     if not kwargs.get('created', False) and not instance.transcribed:
-        print 'about to transcribe..'
         transcribeTask.apply_async((instance, Transcriber, GoogleTranscriber), link=saveTranscription.s())
 
         # response = Transcriber(instance, GoogleTranscriber).transcribe()
