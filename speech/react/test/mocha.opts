@@ -1,0 +1,5 @@
+--compilers js:babel-register
+--require chai
+
+--ui bdd
+--grep ./test/*/*/spec.js
