@@ -201,6 +201,8 @@ REST_FRAMEWORK = {
     )
 }
 
+### CELERY SETTINGS
+ASYNC = False
 ### LOGGIGN
 
 
