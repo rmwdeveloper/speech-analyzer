@@ -11,6 +11,6 @@ class TestTranscoder(TestCase):
 
 
     def test_signal(self):
-        with patch('speech.celeryconfig.CELERY_ALWAYS_EAGER', True, create=True):
-
-            self.assertTrue(True)
+        with patch('transcoder.tasks.transcodeTask') as transcodeTask:
+                transcodeTask()
+                self.assertTrue(transcodeTask.called)
