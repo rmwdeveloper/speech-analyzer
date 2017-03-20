@@ -6,7 +6,7 @@ from .models import Audio
 from channels import Group
 from transcoder.utils import SoxTransformer, Transcoder
 from transcoder.tasks import transcodeTask, saveTranscode
-from transcriber.utils import Transcriber, GoogleTranscriber
+from transcriber.utils import Transcriber, GoogleTranscriber, SphinxTranscriber
 from transcriber.models import Transcription
 from transcriber.tasks import transcribeTask, saveTranscription
 from toneAnalyzer.utils import ToneAnalyzer, WatsonToneAnalyzer
@@ -21,25 +21,12 @@ def transcode(sender, instance, **kwargs):
 @receiver(post_save, sender=Audio)
 def speechToText(sender, instance, **kwargs):
     if not kwargs.get('created', False) and not instance.transcribed:
-        transcribeTask.apply_async((instance, Transcriber, GoogleTranscriber), link=saveTranscription.s())
+        if int(instance.audio.file.size) > 10485760: ## File greater than 10mb, use localTransformer.
+            transformer = SphinxTranscriber
+        else:
+            transformer = GoogleTranscriber
+        transcribeTask.apply_async((instance, Transcriber, transformer), link=saveTranscription.s())
 
-        # response = Transcriber(instance, GoogleTranscriber).transcribe()
-        #
-        # document_text = ''
-        #
-        # for result in response['response'].get('results', []):
-        #     for alternative in result['alternatives']:
-        #         document_text = ' %s %s.' % (document_text, alternative['transcript'])
-        #         transcript_instance = Transcription.objects.create(audio=instance,
-        #                                                            transcription=alternative['transcript'],
-        #                                                            confidence=alternative['confidence'])
-        #         Group('main').send(
-        #             {'text': json.dumps({'transcription': alternative['transcript'], 'type': 'loadTranscription',
-        #                                  'relation': instance.id,
-        #                                  'id': transcript_instance.id, 'confidence': alternative['confidence']})})
-        # instance.transcribed = True
-        # instance.documentTranscription = document_text
-        # instance.save()
 
 
 @receiver(post_save, sender=Audio)

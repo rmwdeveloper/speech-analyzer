@@ -11,7 +11,9 @@ def transcodeTask(instance, transcoder, transformer):
 
 @shared_task
 def saveTranscode(*args, **kwargs):
-    args[0][0].transcoded = True
-    args[0][0].transcodedPath = args[0][1]
-    args[0][0].save()
+    instance = args[0][0]
+    transcodedPath = args[0][1]
+    instance.transcoded = True
+    instance.transcodedPath = transcodedPath
+    instance.save()
 
