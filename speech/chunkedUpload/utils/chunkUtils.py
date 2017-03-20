@@ -15,10 +15,13 @@ def concatenateChunks(identifier):
 
     for chunk in chunks:
         with open(location, 'w+b') as newFile:
-            with open(chunk.file.path, 'rb') as chunkFile:
-                newFile.write(chunkFile.read())
-            chunkFile.close()
-            chunk.delete()
+            try:
+                with open(chunk.file.path, 'rb') as chunkFile:
+                    newFile.write(chunkFile.read())
+                    chunkFile.close()
+                    chunk.delete()
+            except IOError:
+                pass ##TODO: LOGERROR
         newFile.close()
 
 

@@ -7,7 +7,12 @@ class SphinxTranscriber:
     def __init__(self):
         self.service = sr.Recognizer()
 
-    def transcribe(self, speech_content):
-        return self.service.recognize_sphinx(speech_content)
+    def transcribe(self, instance):
+        audio_path = instance.audio.path
+
+        with sr.AudioFile(audio_path) as source:
+            audio = self.service.record(source)
+        transcription = self.service.recognize_sphinx(audio)
+        return transcription
 
 

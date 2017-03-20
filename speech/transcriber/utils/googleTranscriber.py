@@ -1,4 +1,6 @@
 import time
+import base64
+
 import googleapiclient.discovery
 
 from django.conf import settings
@@ -8,8 +10,13 @@ class GoogleTranscriber:
     def get_speech_service(self):
         return googleapiclient.discovery.build('speech', 'v1beta1', developerKey=settings.GOOGLE_KEY)
 
-    def transcribe(self, speech_content):
+    def get_speech_content(self, instance):
+        with open(self.audio_file, 'rb') as speech:
+            return base64.b64encode(speech.read())
+
+    def transcribe(self, instance):
         service = self.get_speech_service()
+        speech_content = self.get_speech_content(instance)
         service_request = service.speech().asyncrecognize(
             body={
                 'config': {

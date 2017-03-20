@@ -21,10 +21,13 @@ def transcode(sender, instance, **kwargs):
 @receiver(post_save, sender=Audio)
 def speechToText(sender, instance, **kwargs):
     if not kwargs.get('created', False) and not instance.transcribed:
-        if int(instance.audio.file.size) > 10485760: ## File greater than 10mb, use localTransformer.
+        if int(instance.audio.file.size) > 500000: ## File greater than 500 kb, use localTransformer.
+        # if int(instance.audio.file.size) > 10485760: ## File greater than 10mb, use localTransformer.
             transformer = SphinxTranscriber
         else:
-            transformer = GoogleTranscriber
+            transformer = SphinxTranscriber
+            # transformer = GoogleTranscriber
+        print (instance.audio.file.size)
         transcribeTask.apply_async((instance, Transcriber, transformer), link=saveTranscription.s())
 
 
