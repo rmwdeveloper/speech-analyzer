@@ -20,8 +20,9 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index),
-    url(r'^upload/$', views.upload),
+    url(r'^test_celery/$', views.test_celery),
     url(r'^results/$', views.results),
     url(r'^admin/', admin.site.urls),
+    url(r'', include('chunkedUpload.urls')),
     url(r'', include('speech.api.urls')),
 ]

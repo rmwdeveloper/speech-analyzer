@@ -1,7 +1,10 @@
 from rest_framework.viewsets import ModelViewSet
 from speech.api.serializers import AudioSerializer, TranscriptionSerializer, DocumentToneSerializer, \
     SentenceToneSerializer
-from speech.models import Audio, Transcription, DocumentTone, SentenceTone
+from speech.models import Audio
+from transcriber.models import Transcription
+from toneAnalyzer.models import SentenceTone, DocumentTone
+
 
 
 class AudioViewSet(ModelViewSet):

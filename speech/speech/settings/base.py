@@ -30,18 +30,29 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels' ## not included in third party b/c made officially by Django
+]
+LOCAL_APPS = [
+    'speech',
+    'toneAnalyzer',
+    'transcoder',
+    'transcriber',
+    'chunkedUpload',
+    'common'
+]
+THIRD_PARTY_APPS = [
     'corsheaders',
     'rest_framework',
-    'channels',
-    'speech'
+    # 'django_cleanup'
 ]
+INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -169,11 +180,18 @@ CHANNEL_LAYERS = {
 
 
 ### API Credentials
-IBM_URL = "https://stream.watsonplatform.net/speech-to-text/api"
-IBM_USERNAME = ""
-IBM_PASSWORD = ""
 
-## REST API PERMISSIONS
+IBM_URL = "https://stream.watsonplatform.net/speech-to-text/api"
+IBM_SPEECH_RECOGNITION_USERNAME = ""
+IBM_SPEECH_RECOGNITION_PASSWORD = ""
+IBM_TONE_ANALYZER_USERNAME = ""
+IBM_TONE_ANALYZER_PASSWORD = ""
+
+GOOGLE_KEY = ""
+
+WIT_SERVER_KEY = ""
+
+## REST API
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
@@ -183,4 +201,85 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     )
+}
+
+### CELERY SETTINGS
+ASYNC = False
+### LOGGIGN
+
+
+LOGFILE_SIZE = 1024 * 1024 * 10
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'datefmt': "%d/%b/%Y %H:%M:%S"
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+        'globalFile': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'xlogger/global.log',
+            'maxBytes': LOGFILE_SIZE * 2,
+            'formatter': 'verbose'
+        },
+        'toneAnalyzerFile': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'xlogger/toneAnalysis.log',
+            'maxBytes': LOGFILE_SIZE,
+            'formatter': 'verbose'
+        },
+        'transcoderFile': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'xlogger/transcoder.log',
+            'maxBytes': LOGFILE_SIZE,
+            'formatter': 'verbose'
+        },
+        'transcriberFile': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'xlogger/transcriber.log',
+            'maxBytes': LOGFILE_SIZE,
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'common.globalLogger': {
+            'handlers': ['globalFile', ],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'transcoder.utils.transcoder': {
+            'handlers': ['transcoderFile', ],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'transcriber.utils.transcriber': {
+            'handlers': ['transcriberFile', ],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'toneAnalyzer.utils.toneAnalyzer': {
+            'handlers': ['toneAnalyzerFile', ],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
 }
