@@ -1,7 +1,7 @@
 import os
 from chunkedUpload.models import ChunkedUpload
 from django.conf import settings
-from speech.models import Audio ## todo: move this somewhere. chunkutils should be standalone
+from speech.models import RawAudio, Speech ## todo: move this somewhere. chunkutils should be standalone
 from common.globalLogger import GlobalLogger
 
 def concatenateChunks(identifier):
@@ -22,9 +22,9 @@ def concatenateChunks(identifier):
                     chunk.delete()
         newFile.close()
 
-
-    audio = Audio()
-    audio.audio = os.path.normpath(location)
-    audio.save()
+    speech = Speech.objects.create()
+    rawAudio = RawAudio(speech = speech)
+    rawAudio.audio = os.path.normpath(location)
+    rawAudio.save()
 
 

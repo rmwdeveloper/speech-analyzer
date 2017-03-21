@@ -1,8 +1,8 @@
-from .models import Audio
+from .models import RawAudio
 from django.forms import ModelForm
 
 
-class AudioForm(ModelForm):
+class RawAudioForm(ModelForm):
     class Meta:
-        model = Audio
-        fields = ['audio', 'transcoded']
+        model = RawAudio
+        fields = ['audio', 'speech']

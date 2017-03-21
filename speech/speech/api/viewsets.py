@@ -1,19 +1,16 @@
 from rest_framework.viewsets import ModelViewSet
-from speech.api.serializers import AudioSerializer, TranscriptionSerializer, DocumentToneSerializer, \
-    SentenceToneSerializer
-from speech.models import Audio
+from speech.api.serializers import  TranscriptionSerializer, ToneSerializer
+from speech.models import RawAudio, Speech
 from transcriber.models import Transcription
-from toneAnalyzer.models import SentenceTone, DocumentTone
+from toneAnalyzer.models import Tone
 
 
 
-class AudioViewSet(ModelViewSet):
-
-    model = Audio
-    queryset = Audio.objects.all()
-    serializer_class = AudioSerializer
-
-
+# class AudioViewSet(ModelViewSet):
+#
+#     model = Audio
+#     queryset = Audio.objects.all()
+#     serializer_class = AudioSerializer
 
 
 class TranscriptionViewSet(ModelViewSet):
@@ -23,15 +20,10 @@ class TranscriptionViewSet(ModelViewSet):
     serializer_class = TranscriptionSerializer
 
 
-class DocumentToneViewSet(ModelViewSet):
+class ToneViewSet(ModelViewSet):
 
-    model = DocumentTone
-    queryset = DocumentTone.objects.all()
-    serializer_class = DocumentToneSerializer
+    model = Tone
+    queryset = Tone.objects.all()
+    serializer_class = ToneSerializer
 
 
-class SentenceToneViewSet(ModelViewSet):
-
-    model = SentenceTone
-    queryset = SentenceTone.objects.all()
-    serializer_class = SentenceToneSerializer

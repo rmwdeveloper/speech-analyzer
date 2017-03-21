@@ -17,3 +17,6 @@ def saveTranscode(*args, **kwargs):
     instance.transcodedPath = transcodedPath
     instance.save()
 
+@shared_task
+def splitTask(instance, transcoder, transformer):
+    return (instance, transcoder(instance, transformer).split())

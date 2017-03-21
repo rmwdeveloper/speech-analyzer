@@ -1,36 +1,35 @@
 from rest_framework import serializers
-from speech.models import Audio
+from speech.models import Speech, RawAudio
 from transcriber.models import Transcription
-from toneAnalyzer.models import SentenceTone, DocumentTone
+from toneAnalyzer.models import Tone
 
 
 
-class SentenceToneSerializer(serializers.ModelSerializer):
+class ToneSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = SentenceTone
+        model = Tone
         fields = '__all__'
 
 
-class DocumentToneSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = DocumentTone
-        fields = '__all__'
+# class DocumentToneSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = DocumentTone
+#         fields = '__all__'
 
 
 class TranscriptionSerializer(serializers.ModelSerializer):
-    sentence_tones = SentenceToneSerializer(many=True, read_only=True)
+    tones = ToneSerializer(many=True, read_only=True)
     # sentence_tones = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='sentencetone-detail')
     class Meta:
         model = Transcription
-        fields = ('id', 'transcription', 'confidence', 'audio', 'sentence_tones')
+        fields = ('id', 'transcription', 'confidence', 'audio', 'tones')
 
 
-class AudioSerializer(serializers.ModelSerializer):
-    document_tones  = DocumentToneSerializer(many=True, read_only=True)
+class RawAudioSerializer(serializers.ModelSerializer):
     transcriptions  = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='transcription-detail')
     class Meta:
-        model = Audio
-        fields = ('id', 'transcriptions', 'document_tones', 'audio', 'documentTranscription', )
+        model = RawAudio
+        fields = ('id', 'transcriptions', 'audio', 'documentTranscription', )
 

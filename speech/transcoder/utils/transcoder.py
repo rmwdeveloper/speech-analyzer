@@ -1,5 +1,6 @@
 import os
 from django.conf import settings
+from speech.models import ChunkedAudio
 from common.globalLogger import GlobalLogger
 
 class Transcoder:
@@ -13,6 +14,7 @@ class Transcoder:
         self.output_settings = kwargs.get('output_settings', '-ar 16000 -ac 1 -y')
         self.output_directory = self.getOutputDirectory()
         self.logger = GlobalLogger
+        self.chunkModel = ChunkedAudio
 
     def createDirectory(self, base):
 
@@ -26,7 +28,7 @@ class Transcoder:
         untranscoded_prefix = settings.UNTRANSCODED_PREFIX
         return filename.replace(os.path.join(self.media_root, untranscoded_prefix), '')
 
-    def getOutputDirectory(self, ext='.raw'):
+    def getOutputDirectory(self, ext='.wav'):
         base, name = os.path.split(self.subpath)
         transcoded_directory = self.createDirectory(base)
         old_filename, old_file_extension = os.path.splitext(name)
@@ -42,3 +44,5 @@ class Transcoder:
         except Exception as e:
             self.logger.error('Tried to Transcode. %s' % (e.message,))
 
+    def split(self):
+        self.transformer.split(self.instance, self.chunkModel)
