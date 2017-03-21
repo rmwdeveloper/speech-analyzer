@@ -1,22 +1,24 @@
-import json
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
 
-from .models import Audio
-from channels import Group
+from .models import RawAudio, Speech
+from transcoder.models import TranscodedAudio
 from transcoder.utils import SoxTransformer, Transcoder
 from transcoder.tasks import transcodeTask, saveTranscode
-from transcriber.utils import Transcriber, GoogleTranscriber, SphinxTranscriber, WitTranscriber
+
 from transcriber.models import Transcription
+from transcriber.utils import Transcriber, GoogleTranscriber, SphinxTranscriber, WitTranscriber
 from transcriber.tasks import transcribeTask, saveTranscription
-from toneAnalyzer.utils import ToneAnalyzer, WatsonToneAnalyzer
+
 from toneAnalyzer.models import DocumentTone, SentenceTone
+from toneAnalyzer.utils import ToneAnalyzer, WatsonToneAnalyzer
+
 
 
 # TODO: Google Transcoder needs..
 
-@receiver(post_save, sender=Audio)
+@receiver(post_save, sender=RawAudio)
 def transcode(sender, instance, **kwargs):
     if kwargs.get('created', False):
         if settings.ASYNC:
@@ -27,9 +29,9 @@ def transcode(sender, instance, **kwargs):
             # transcodeTask.apply((instance, Transcoder, SoxTransformer), link=saveTranscode.s())
 
 
-@receiver(post_save, sender=Audio)
+@receiver(post_save, sender=TranscodedAudio)
 def speechToText(sender, instance, **kwargs):
-    if not kwargs.get('created', False) and not instance.transcribed:
+    if not kwargs.get('created', False):
         if int(instance.audio.file.size) <= 10485760: ## FileSize less than 10mb
             transformer = GoogleTranscriber
         elif int(instance.audio.file.size) > 10485760 and int(instance.audio.file.size) <= 20485760: ## Between 10 and 20
@@ -47,7 +49,7 @@ def speechToText(sender, instance, **kwargs):
 
 
 
-@receiver(post_save, sender=Audio)
+@receiver(post_save, sender=Transcription)
 def analyze(sender, instance, **kwargs):
     if not kwargs.get('created', False) and instance.transcribed  and not instance.toneAnalyzed:
         ##todo: delete audio files

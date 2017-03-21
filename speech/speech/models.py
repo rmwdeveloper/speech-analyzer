@@ -4,19 +4,24 @@ from django.db import models
 from common.formatChecker import AudioVideoFileField
 
 
-class Audio(models.Model):
+
+
+
+
+class Speech(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    # transcribed = models.BooleanField(default=False)
+    # toneAnalyzed = models.BooleanField(default=False)
+    # documentTranscription = models.TextField(null=True, blank=True)
+
+
+class RawAudio(models.Model):
     audio = AudioVideoFileField(upload_to = settings.UNTRANSCODED_PREFIX + '/%Y/%m/%d',
-                                           # content_types=['video/*', 'audio/*'],
-                                           # max_upload_size=10485760,
                                            blank=True,
                                            null=True)
+    speech = models.ForeignKey(Speech)
+    # transcoded = models.BooleanField(default=False)
 
-    transcodedPath = models.CharField(null = True, max_length = 1000)
-    transcoded = models.BooleanField(default=False)
-    transcribed = models.BooleanField(default=False)
-    toneAnalyzed = models.BooleanField(default=False)
-    documentTranscription = models.TextField(null=True, blank=True)
 
-class Test(models.Model): ## todo delete this
-    text = models.CharField(max_length=255)
+
 from . import signals ## should be done with appconfig
