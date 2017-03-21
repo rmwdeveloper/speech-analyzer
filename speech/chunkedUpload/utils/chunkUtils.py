@@ -9,19 +9,17 @@ def concatenateChunks(identifier):
     try:
         location = os.path.join(settings.MEDIA_ROOT, settings.UNTRANSCODED_PREFIX, chunks[0].resumableFilename)
     except IndexError as e:
+        print 'ERROR'
         GlobalLogger.error('Tried to get first chunk before concatentation, but it didnt exist.'
-                           'identifier is...%s.  %s') % (identifier, e)
+                           'identifier is...%s.  %s') % (str(identifier), e)
 
 
     for chunk in chunks:
         with open(location, 'w+b') as newFile:
-            try:
-                with open(chunk.file.path, 'rb') as chunkFile:
+            with open(chunk.file.path, 'rb') as chunkFile:
                     newFile.write(chunkFile.read())
                     chunkFile.close()
                     chunk.delete()
-            except IOError:
-                pass ##TODO: LOGERROR
         newFile.close()
 
 

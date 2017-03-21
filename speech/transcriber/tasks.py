@@ -10,20 +10,11 @@ def transcribeTask(instance, transcriber, transformer):
 
 @shared_task
 def saveTranscription(*args, **kwargs):
-    instance = args[0][0]
-    response = args[0][1]
-    document_text = ''
-    for result in response['response'].get('results', []):
-        for alternative in result['alternatives']:
-            document_text = ' %s %s.' % (document_text, alternative['transcript'])
-            transcript_instance = Transcription.objects.create(audio=instance,
-                                                               transcription=alternative['transcript'],
-                                                               confidence=alternative['confidence'])
-            # Group('main').send(
-            #     {'text': json.dumps({'transcription': alternative['transcript'], 'type': 'loadTranscription',
-            #                          'relation': instance.id,
-            #                          'id': transcript_instance.id, 'confidence': alternative['confidence']})})
-    instance.transcribed = True
-    instance.documentTranscription = document_text
-    instance.save()
+    instance = kwargs.get('instance')
+    Transcriber = kwargs.get('transcriber')
+    transformer = kwargs.get('transformer')
+    transcription = kwargs.get('transcription')
+
+    Transcriber(instance, transformer).saveTranscription(Transcription, transcription)
+
 

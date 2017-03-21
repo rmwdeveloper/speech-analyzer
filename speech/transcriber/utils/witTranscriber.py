@@ -1,8 +1,12 @@
-import speech_recognition as sr
+from __future__ import unicode_literals
+
 import os
+import unicodedata
+import speech_recognition as sr
+from django.conf import settings
 
 
-class SphinxTranscriber:
+class WitTranscriber:
 
     def __init__(self):
         self.service = sr.Recognizer()
@@ -17,7 +21,7 @@ class SphinxTranscriber:
 
         with sr.AudioFile(os.path.abspath('C:\\Users\\rob\\speechExp\\speech\\uploads\\transcoded\\joey.wav')) as source:
             audio = self.service.record(source)
-        transcription = self.service.recognize_sphinx(audio)
+        transcription = self.service.recognize_wit(audio, key=settings.WIT_SERVER_KEY)
         return transcription
 
 
