@@ -11,8 +11,7 @@ class Transcoder:
         self.subpath = self.getSubpath(self.file.name)
         self.instance = instance
         self.output_settings = kwargs.get('output_settings', '-ar 16000 -ac 1 -y')
-        self.output_directory = self.getOutputDirectory() ## TODO: REFACTOR
-        self.output_directory_two = self.getOutputDirectory(ext='.wav') ## TODO: REFACTOR
+        self.output_directory = self.getOutputDirectory()
         self.logger = GlobalLogger
 
     def createDirectory(self, base):
@@ -37,7 +36,6 @@ class Transcoder:
     def transcode(self):
         try:
             self.transformer.convert(self.file.name, self.output_directory)
-            self.transformer.convert(self.file.name, self.output_directory_two)
             return self.output_directory
         except AttributeError as e:
             self.logger.error('Tried to transcode using the WebService but had an AttributeErro. %s' % (e.message,))
