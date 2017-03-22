@@ -66,33 +66,43 @@ def speechToText(sender, instance, **kwargs):
                 print 'transcription: %s' % (transcription, )
                 saveTranscription(instance=chunk, transcriber=Transcriber, transformer=transformer,
                                   transcription=transcription)
-        # instance.speech.transcribed = True
-        # instance.speech.save()
+        instance.transcribed = True
+        instance.save()
 
 
-@receiver(post_save, sender=Speech)
+@receiver(post_save, sender=TranscodedAudio)
 def analyze(sender, instance, **kwargs):
-    if instance.transcribed and not instance.toneAnalyzed:
+    if instance.transcribed and not instance.speech.toneAnalyzed:
         ##todo: delete audio files
-        transcriptions = Transcription.objects.filter(audio=instance)
+        transcriptions = Transcription.objects.filter(speech=instance.speech)
         tone_analyzer = ToneAnalyzer(transcriptions, WatsonToneAnalyzer)
-        tones = tone_analyzer.analyze(instance.documentTranscription)
+        # tones = tone_analyzer.analyze(instance.documentTranscription)
 
-        for categories in tones['document_tone']['tone_categories']:
-            for tone in categories['tones']:
-                DocumentTone.objects.create(document=instance, score=tone['score'],
-                                            toneName=tone['tone_name'],
-                                            categoryName=categories['category_name'])
 
         for transcription in transcriptions:
             tones = tone_analyzer.analyze(transcription.transcription)
             for categories in tones['document_tone']['tone_categories']:
                 for tone in categories['tones']:
-                    SentenceTone.objects.create(sentence=transcription, score=tone['score'],
+                    Tone.objects.create(transcription=transcription, score=tone['score'],
                                                 toneName=tone['tone_name'],
                                                 categoryName=categories['category_name'])
 
+        # for categories in tones['document_tone']['tone_categories']:
+        #     for tone in categories['tones']:
+        #         DocumentTone.objects.create(document=instance, score=tone['score'],
+        #                                     toneName=tone['tone_name'],
+        #                                     categoryName=categories['category_name'])
 
+        # for transcription in transcriptions:
+        #     tones = tone_analyzer.analyze(transcription.transcription)
+        #     for categories in tones['document_tone']['tone_categories']:
+        #         for tone in categories['tones']:
+        #             SentenceTone.objects.create(sentence=transcription, score=tone['score'],
+        #                                         toneName=tone['tone_name'],
+        #                                         categoryName=categories['category_name'])
+
+    instance.speech.toneAnalyzed = True
+    instance.speech.save()
         ## below was part of speechToText
         # if int(instance.file.file.size) <= 10485760: ## FileSize less than 10mb
         #     transformer = GoogleTranscriber
