@@ -14,6 +14,8 @@ class TranscodedAudio(models.Model):
                                            null=True)
     speech = models.ForeignKey(Speech) ## TODO: Convert To Generic Relation
     split = models.BooleanField(default=False)
+    transcribed = models.BooleanField(default=False)
+
 
 class ChunkedAudio(models.Model): ## TODO: Move to transcoder
     transcoded = models.ForeignKey(TranscodedAudio, null=True)

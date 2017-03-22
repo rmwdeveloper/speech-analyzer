@@ -53,7 +53,7 @@ def split(sender, instance, **kwargs):
 
 @receiver(post_save, sender=TranscodedAudio)
 def speechToText(sender, instance, **kwargs):
-    if not instance.speech.transcribed and instance.split:
+    if not instance.transcribed and instance.split:
         transformer = GoogleTranscriber
         chunks_to_transcode = ChunkedAudio.objects.filter(transcoded=instance)
         print len(chunks_to_transcode)
@@ -66,8 +66,9 @@ def speechToText(sender, instance, **kwargs):
                 print 'transcription: %s' % (transcription, )
                 saveTranscription(instance=chunk, transcriber=Transcriber, transformer=transformer,
                                   transcription=transcription)
-        instance.speech.transcribed = True
-        instance.speech.save()
+        # instance.speech.transcribed = True
+        # instance.speech.save()
+
 
 @receiver(post_save, sender=Speech)
 def analyze(sender, instance, **kwargs):
