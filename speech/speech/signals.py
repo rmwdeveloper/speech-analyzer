@@ -1,6 +1,8 @@
-from django.db.models.signals import post_save
+import os
+from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from django.conf import settings
+from django.core.files.storage import default_storage
 
 from .models import RawAudio, Speech
 from transcoder.models import TranscodedAudio
@@ -16,7 +18,13 @@ from toneAnalyzer.utils import ToneAnalyzer, WatsonToneAnalyzer
 
 
 
-# TODO: Google Transcoder needs..
+@receiver(pre_delete, sender=RawAudio) ## todo move to own signals.py
+def deleteFile(sender, instance, **kwargs):
+    try:
+        default_storage.delete(instance.audio.path)
+    except WindowsError:
+        pass ##todo why is this process locked.
+
 
 @receiver(post_save, sender=RawAudio) ## Convert to .wav
 def transcode(sender, instance, **kwargs):
@@ -25,18 +33,20 @@ def transcode(sender, instance, **kwargs):
             transcodeTask.apply_async((instance, Transcoder, SoxTransformer), link=saveTranscode.s())
         else:
             instance, transcodedPath = transcodeTask(instance, Transcoder, SoxTransformer)
+            print 'About to save transcode.. instance, transcodedPath %s %s' % (instance, transcodedPath)
             saveTranscode((instance, transcodedPath))
             # transcodeTask.apply((instance, Transcoder, SoxTransformer), link=saveTranscode.s())
 
-@receiver(post_save, sender=RawAudio)  ## Convert to .wav
+@receiver(post_save, sender=TranscodedAudio)  ## Convert to .wav
 def split(sender, instance, **kwargs):
-    if not kwargs.get('created', False) and not instance.split:
+    if not instance.split:
         if settings.ASYNC:
             pass
             # transcodeTask.apply_async((instance, Transcoder, SoxTransformer), link=saveTranscode.s())
         else:
             splitTask(instance, Transcoder, PydubTransformer)
-            instance, transcodedPath = transcodeTask(instance, Transcoder, SoxTransformer)
+            print 'splitted'
+            # instance, transcodedPath = transcodeTask(instance, Transcoder, SoxTransformer)
             # saveTranscode((instance, transcodedPath))
             # transcodeTask.apply((instance, Transcoder, SoxTransformer), link=saveTranscode.s())
 

@@ -1,13 +1,17 @@
 import os
 from django.conf import settings
-from speech.models import ChunkedAudio
+from ..models import ChunkedAudio, chunk_upload_to_abs
 from common.globalLogger import GlobalLogger
 
 class Transcoder:
     def __init__(self, instance, transformer,  **kwargs):
         self.transformer = transformer()
         self.transcoded_prefix = settings.TRANSCODED_PREFIX
-        self.file = instance.audio.file ## Refactor ? Making assumptions on how files are accessed.
+        ## Refactor ? Making assumptions on how files are accessed.
+        if hasattr(instance, 'audio'):
+            self.file = instance.audio.file
+        else:
+            self.file = instance.file.file
         self.media_root = os.path.normpath(settings.MEDIA_ROOT)
         self.subpath = self.getSubpath(self.file.name)
         self.instance = instance
@@ -15,6 +19,7 @@ class Transcoder:
         self.output_directory = self.getOutputDirectory()
         self.logger = GlobalLogger
         self.chunkModel = ChunkedAudio
+        self.upload_to = chunk_upload_to_abs
 
     def createDirectory(self, base):
 
@@ -45,4 +50,4 @@ class Transcoder:
             self.logger.error('Tried to Transcode. %s' % (e.message,))
 
     def split(self):
-        self.transformer.split(self.instance, self.chunkModel)
+        self.transformer.split(self.instance, self.chunkModel, self.upload_to, self.file)

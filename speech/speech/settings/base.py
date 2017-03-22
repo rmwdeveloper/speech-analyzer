@@ -143,6 +143,7 @@ STATICFILES_DIRS = (
 # Uploaded Files
 UNTRANSCODED_PREFIX = 'raw'
 TRANSCODED_PREFIX = 'transcoded'
+CHUNK_PREFIX = 'chunks'
 MEDIA_ROOT = BASE_DIR + '/uploads/'
 
 #### CORS SETTINGS

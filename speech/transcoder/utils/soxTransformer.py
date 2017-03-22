@@ -8,7 +8,7 @@ class SoxTransformer:
     def convert(self, filename, output_directory):
 
         tfm = sox.Transformer()
-        tfm.silence() ## Remove silence
+        # tfm.silence() ## Remove silence
         tfm.convert(samplerate=16000, n_channels=1)
 
         try:

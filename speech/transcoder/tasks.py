@@ -1,7 +1,7 @@
 # Create your tasks here
 from __future__ import absolute_import, unicode_literals
 from celery import shared_task
-
+from .models import TranscodedAudio
 
 
 
@@ -13,9 +13,12 @@ def transcodeTask(instance, transcoder, transformer):
 def saveTranscode(*args, **kwargs):
     instance = args[0][0]
     transcodedPath = args[0][1]
-    instance.transcoded = True
-    instance.transcodedPath = transcodedPath
-    instance.save()
+
+    ts = TranscodedAudio(speech = instance.speech)
+    ts.file.name = transcodedPath
+    ts.save()
+
+    instance.delete()
 
 @shared_task
 def splitTask(instance, transcoder, transformer):
