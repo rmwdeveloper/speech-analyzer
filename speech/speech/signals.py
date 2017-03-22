@@ -45,7 +45,7 @@ def split(sender, instance, **kwargs):
             # transcodeTask.apply_async((instance, Transcoder, SoxTransformer), link=saveTranscode.s())
         else:
             splitTask(instance, Transcoder, PydubTransformer)
-            print 'splitted'
+
             # instance, transcodedPath = transcodeTask(instance, Transcoder, SoxTransformer)
             # saveTranscode((instance, transcodedPath))
             # transcodeTask.apply((instance, Transcoder, SoxTransformer), link=saveTranscode.s())
@@ -56,7 +56,7 @@ def speechToText(sender, instance, **kwargs):
     if not instance.speech.transcribed and instance.split:
         transformer = GoogleTranscriber
         chunks_to_transcode = ChunkedAudio.objects.filter(transcoded=instance)
-
+        print len(chunks_to_transcode)
         for chunk in chunks_to_transcode:
             if settings.ASYNC:
                 transcribeTask.apply_async((chunk, Transcriber, transformer), link=saveTranscription.s())
