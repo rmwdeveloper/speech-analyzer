@@ -5,7 +5,7 @@ from .models import Transcription
 
 @shared_task
 def transcribeTask(instance, transcriber, transformer):
-    return (instance, transcriber(instance, transformer).transcribe())
+    return transcriber(instance, transformer).transcribe()
 
 
 @shared_task

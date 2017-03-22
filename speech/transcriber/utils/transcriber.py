@@ -2,7 +2,7 @@
 class Transcriber:
     def __init__(self, instance, transcription_service):
         self.instance = instance
-        self.audio_file = instance.transcodedPath
+        self.audio_file = instance.chunk.path
         self.transcription_service = transcription_service()
 
     def transcribe(self):

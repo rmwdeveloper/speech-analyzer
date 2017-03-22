@@ -13,24 +13,25 @@ class GoogleTranscriber:
         return googleapiclient.discovery.build('speech', 'v1beta1', developerKey=settings.GOOGLE_KEY)
 
     def get_speech_content(self, instance):
-        with open(instance.transcodedPath, 'rb') as speech:
+        with open(instance.chunk.path, 'rb') as speech:
             return base64.b64encode(speech.read())
+        speech.close()
 
     def saveTranscription(self, instance, model, transcription):
         document_text = ''
         for result in transcription['response'].get('results', []):
             for alternative in result['alternatives']:
                 document_text = ' %s %s.' % (document_text, alternative['transcript'])
-                transcript_instance = model.objects.create(audio=instance,
-                                                                   transcription=alternative['transcript'],
-                                                                   confidence=alternative['confidence'])
+                model.objects.create(speech=instance.transcoded.speech, ## Create Transcription instance
+                   transcription=alternative['transcript'],
+                   confidence=alternative['confidence'])
                 # Group('main').send(
                 #     {'text': json.dumps({'transcription': alternative['transcript'], 'type': 'loadTranscription',
                 #                          'relation': instance.id,
                 #                          'id': transcript_instance.id, 'confidence': alternative['confidence']})})
-        instance.transcribed = True
-        instance.documentTranscription = document_text
-        instance.save()
+        # instance.transcribed = True
+        # instance.documentTranscription = document_text
+        # instance.save()
 
     def transcribe(self, instance):
         service = self.get_speech_service()

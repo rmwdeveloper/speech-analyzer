@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.files.storage import default_storage
 
 from .models import RawAudio, Speech
-from transcoder.models import TranscodedAudio
+from transcoder.models import TranscodedAudio, ChunkedAudio
 from transcoder.utils import SoxTransformer, Transcoder, PydubTransformer
 from transcoder.tasks import transcodeTask, saveTranscode, splitTask
 
@@ -53,19 +53,33 @@ def split(sender, instance, **kwargs):
 
 @receiver(post_save, sender=TranscodedAudio)
 def speechToText(sender, instance, **kwargs):
-    if not instance.speech.transcribed:
-        if int(instance.file.file.size) <= 10485760: ## FileSize less than 10mb
-            transformer = GoogleTranscriber
-        elif int(instance.file.file.size) > 10485760 and int(instance.audio.file.size) <= 20485760: ## Between 10 and 20
-            transformer = WitTranscriber
-        else: ## Greater than 20 mb
-            transformer = SphinxTranscriber
-        if settings.ASYNC:
-            transcribeTask.apply_async((instance, Transcriber, transformer), link=saveTranscription.s())
-        else:
-            transformer = SphinxTranscriber
-            instance, transcription = transcribeTask(instance, Transcriber, transformer)
-            saveTranscription(instance=instance, transcriber=Transcriber, transformer=transformer, transcription=transcription)
+    if not instance.speech.transcribed and instance.split:
+        transformer = GoogleTranscriber
+        chunks_to_transcode = ChunkedAudio.objects.filter(transcoded=instance)
+
+        for chunk in chunks_to_transcode:
+            if settings.ASYNC:
+                transcribeTask.apply_async((chunk, Transcriber, transformer), link=saveTranscription.s())
+
+            else:
+                transcription = transcribeTask(chunk, Transcriber, transformer)
+                print 'transcription: %s' % (transcription, )
+                saveTranscription(instance=chunk, transcriber=Transcriber, transformer=transformer,
+                                  transcription=transcription)
+        instance.speech.transcribed = True
+        instance.speech.save()
+
+        # if int(instance.file.file.size) <= 10485760: ## FileSize less than 10mb
+        #     transformer = GoogleTranscriber
+        # elif int(instance.file.file.size) > 10485760 and int(instance.audio.file.size) <= 20485760: ## Between 10 and 20
+        #     transformer = WitTranscriber
+        # else: ## Greater than 20 mb
+        #     transformer = SphinxTranscriber
+        # if settings.ASYNC:
+        #     transcribeTask.apply_async((instance, Transcriber, transformer), link=saveTranscription.s())
+        # else:
+        #     instance, transcription = transcribeTask(instance, Transcriber, transformer)
+        #     saveTranscription(instance=instance, transcriber=Transcriber, transformer=transformer, transcription=transcription)
             # saveTranscription((instance, transcription ))
             # transcribeTask.apply((instance, Transcriber, transformer), link=saveTranscription.s())
 #
