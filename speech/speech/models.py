@@ -8,6 +8,7 @@ from common.formatChecker import AudioVideoFileField
 class Speech(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     transcribed = models.BooleanField(default=False)
+    toneAnalyzed = models.BooleanField(default=False)
 
 class RawAudio(models.Model):
     audio = AudioVideoFileField(upload_to = settings.UNTRANSCODED_PREFIX + '/%Y/%m/%d',
