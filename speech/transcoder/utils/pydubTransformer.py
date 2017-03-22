@@ -12,6 +12,7 @@ class PydubTransformer:
             createUploadDirsIfNotExist(settings.CHUNK_PREFIX, str(instance.id))
             file_path = upload_to(instance, 'chunk%s.wav' % (i,))
             f = chunk.export(file_path, format="wav")
-            chunkModel = chunkModel(transcoded=instance)
-            chunkModel.chunk.name = f.name
-            chunkModel.save()
+            chunkModelInstance = chunkModel(transcoded=instance)
+            chunkModelInstance.chunk.name = f.name
+            chunkModelInstance.order = i
+            chunkModelInstance.save()

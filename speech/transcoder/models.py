@@ -18,3 +18,8 @@ class TranscodedAudio(models.Model):
 class ChunkedAudio(models.Model): ## TODO: Move to transcoder
     transcoded = models.ForeignKey(TranscodedAudio, null=True)
     chunk = models.FileField(upload_to=chunk_upload_to_abs) ## change to based on.. RawAudio pk
+    order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+        unique_together = (('transcoded', 'order'))
