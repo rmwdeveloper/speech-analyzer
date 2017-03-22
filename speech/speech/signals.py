@@ -51,23 +51,23 @@ def split(sender, instance, **kwargs):
             # transcodeTask.apply((instance, Transcoder, SoxTransformer), link=saveTranscode.s())
 
 
-# @receiver(post_save, sender=TranscodedAudio)
-# def speechToText(sender, instance, **kwargs):
-#     if not kwargs.get('created', False):
-#         if int(instance.audio.file.size) <= 10485760: ## FileSize less than 10mb
-#             transformer = GoogleTranscriber
-#         elif int(instance.audio.file.size) > 10485760 and int(instance.audio.file.size) <= 20485760: ## Between 10 and 20
-#             transformer = WitTranscriber
-#         else: ## Greater than 20 mb
-#             transformer = SphinxTranscriber
-#         if settings.ASYNC:
-#             transcribeTask.apply_async((instance, Transcriber, transformer), link=saveTranscription.s())
-#         else:
-#             transformer = SphinxTranscriber
-#             instance, transcription = transcribeTask(instance, Transcriber, transformer)
-#             saveTranscription(instance=instance, transcriber=Transcriber, transformer=transformer, transcription=transcription)
-#             # saveTranscription((instance, transcription ))
-#             # transcribeTask.apply((instance, Transcriber, transformer), link=saveTranscription.s())
+@receiver(post_save, sender=TranscodedAudio)
+def speechToText(sender, instance, **kwargs):
+    if not instance.speech.transcribed:
+        if int(instance.file.file.size) <= 10485760: ## FileSize less than 10mb
+            transformer = GoogleTranscriber
+        elif int(instance.file.file.size) > 10485760 and int(instance.audio.file.size) <= 20485760: ## Between 10 and 20
+            transformer = WitTranscriber
+        else: ## Greater than 20 mb
+            transformer = SphinxTranscriber
+        if settings.ASYNC:
+            transcribeTask.apply_async((instance, Transcriber, transformer), link=saveTranscription.s())
+        else:
+            transformer = SphinxTranscriber
+            instance, transcription = transcribeTask(instance, Transcriber, transformer)
+            saveTranscription(instance=instance, transcriber=Transcriber, transformer=transformer, transcription=transcription)
+            # saveTranscription((instance, transcription ))
+            # transcribeTask.apply((instance, Transcriber, transformer), link=saveTranscription.s())
 #
 #
 #

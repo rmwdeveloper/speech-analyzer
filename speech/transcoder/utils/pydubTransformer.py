@@ -16,3 +16,6 @@ class PydubTransformer:
             chunkModelInstance.chunk.name = f.name
             chunkModelInstance.order = i
             chunkModelInstance.save()
+
+            instance.split = True
+            instance.save()
