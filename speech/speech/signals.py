@@ -33,7 +33,6 @@ def transcode(sender, instance, **kwargs):
             transcodeTask.apply_async((instance, Transcoder, SoxTransformer), link=saveTranscode.s())
         else:
             instance, transcodedPath = transcodeTask(instance, Transcoder, SoxTransformer)
-            print 'About to save transcode.. instance, transcodedPath %s %s' % (instance, transcodedPath)
             saveTranscode((instance, transcodedPath))
             # transcodeTask.apply((instance, Transcoder, SoxTransformer), link=saveTranscode.s())
 
@@ -41,7 +40,7 @@ def transcode(sender, instance, **kwargs):
 def split(sender, instance, **kwargs):
     if not instance.split:
         if settings.ASYNC:
-            pass
+            splitTask.apply_async((instance, Transcoder, PydubTransformer))
             # transcodeTask.apply_async((instance, Transcoder, SoxTransformer), link=saveTranscode.s())
         else:
             splitTask(instance, Transcoder, PydubTransformer)
